@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.predeposit.mapper.PredepositRecordMapper">
+
+    <resultMap id="predepositRecord" type="com.lecshop.predeposit.bean.PredepositRecord">
+        <result column="id" property="id"/>
+        <result column="customer_id" property="customerId"/>
+        <result column="username" property="customerName"/>
+        <result column="trans_type" property="transType"/>
+        <result column="money" property="money"/>
+        <result column="current_money" property="currentMoney"/>
+        <result column="remark" property="remark"/>
+        <result column="status" property="status"/>
+        <result column="transcode " property="transCode"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <select id="queryLastRecordByCustomerId" parameterType="java.lang.Long" resultMap="predepositRecord">
+      select * from ls_pre_deposit_record where customer_id = #{id} and status = '1' order by id desc limit 1
+    </select>
+
+    <select id="queryPredepositRecords" resultMap="predepositRecord" parameterType="java.util.Map">
+        SELECT ls_pre_deposit_record.*,ls_customer.username FROM
+        ls_pre_deposit_record JOIN ls_customer ON ls_customer.id=ls_pre_deposit_record.customer_id WHERE
+        ls_pre_deposit_record.status = 1
+        <if test="customerId!=null and customerId!=0">
+            AND ls_customer.id = #{customerId}
+        </if>
+        <if test="userName!=null and userName!=''">
+            AND ls_customer.username LIKE CONCAT(CONCAT('%', #{userName},'%'))
+        </if>
+        <if test="transCode!=''and transCode!=null">
+            AND ls_pre_deposit_record.transcode LIKE CONCAT(CONCAT('%', #{transCode},'%'))
+        </if>
+        <if test="startTime!=''and startTime!=null">
+            AND ls_pre_deposit_record.create_time &gt;=#{startTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="endTime!=''and endTime!=null">
+            AND ls_pre_deposit_record.create_time &lt;=#{endTime,jdbcType=TIMESTAMP}
+        </if>
+        order by ls_pre_deposit_record.create_time desc limit #{startRowNum},#{pageSize}
+    </select>
+
+
+    <select id="queryPredepositRecordCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT count(1) FROM
+        ls_pre_deposit_record JOIN ls_customer ON ls_customer.id=ls_pre_deposit_record.customer_id WHERE
+        ls_pre_deposit_record.status = 1
+        <if test="customerId!=null and customerId!=0">
+            AND ls_customer.id = #{customerId}
+        </if>
+        <if test="userName!=null and userName!=''">
+            AND ls_customer.username LIKE CONCAT(CONCAT('%', #{userName},'%'))
+        </if>
+        <if test="transCode!=''and transCode!=null">
+            AND ls_pre_deposit_record.transcode LIKE CONCAT(CONCAT('%', #{transCode},'%'))
+        </if>
+        <if test="startTime!=''and startTime!=null">
+            AND ls_pre_deposit_record.create_time &gt;=#{startTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="endTime!=''and endTime!=null">
+            AND ls_pre_deposit_record.create_time &lt;=#{endTime,jdbcType=TIMESTAMP}
+        </if>
+    </select>
+</mapper>

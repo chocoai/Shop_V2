@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.marketingmanager.mapper.CombinationSkuMapper">
+
+    <resultMap id="comSku" type="com.lecshop.marketingmanager.bean.CombinationSku">
+        <result column="id" property="id"/>
+        <result column="combination_id" property="combinationId"/>
+        <result column="sku_id" property="skuId"/>
+        <result column="url" property="sku.url"/>
+        <result column="name" property="sku.name"/>
+        <result column="price" property="sku.price"/>
+        <result column="subtitle" property="sku.subTitle"/>
+        <result column="sku_no" property="sku.skuNo"/>
+    </resultMap>
+
+    <select id="querySkuOfGoodCom" parameterType="java.util.Map" resultMap="comSku">
+        SELECT s.id AS id, s.url AS url, s.`name` AS name, s.price AS price, s.subtitle AS subtitle,
+        s.sku_no AS sku_no, l.combination_id AS combination_id, l.sku_id AS sku_id
+        FROM ls_combination_sku l JOIN ls_sku s ON l.sku_id = s.id
+        WHERE l.combination_id = #{id} AND s.store_id = #{storeId}
+        ORDER BY s.create_time DESC
+        limit #{startRowNum},#{pageSize}
+    </select>
+
+    <select id="querySkuCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM ls_combination_sku l JOIN ls_sku s ON l.sku_id = s.id
+        WHERE l.combination_id = #{id} AND s.store_id = #{storeId}
+    </select>
+
+    <select id="querySkuIdWithAdd" resultType="java.lang.String">
+        SELECT sku_id FROM ls_combination_sku WHERE combination_id = #{combinationId}
+    </select>
+
+    <insert id="addCombinationSku" parameterType="com.lecshop.marketingmanager.bean.CombinationSku">
+        INSERT INTO ls_combination_sku (combination_id,sku_id) VALUES (#{combinationId}, #{skuId})
+    </insert>
+
+    <delete id="deleteCombinationSku" parameterType="java.lang.String">
+        DELETE FROM ls_combination_sku WHERE sku_id = #{id}
+    </delete>
+
+    <delete id="batchDeleteCombiantionSKu" parameterType="java.lang.String">
+        DELETE FROM ls_combination_sku WHERE sku_id IN
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

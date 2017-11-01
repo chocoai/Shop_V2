@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.marketing.mapper.GroupBuyMapper">
+
+    <resultMap id="groupBuy" type="com.lecshop.marketing.bean.GroupBuy">
+        <result column="id" property="id"/>
+        <result column="marketing_id" property="marketingId"/>
+        <result column="discount" property="discount"/>
+    </resultMap>
+
+
+    <insert id="addGroupBuy" parameterType="com.lecshop.marketing.bean.GroupBuy">
+        insert into ls_marketing_groupbuy
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="marketingId != null">
+                marketing_id,
+            </if>
+            <if test="discount != null">
+                discount
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="marketingId != null">
+                #{marketingId},
+            </if>
+            <if test="discount != null">
+                #{discount}
+            </if>
+        </trim>
+    </insert>
+
+    <select id="queryGroupBuyByMarketingId" parameterType="java.lang.Long" resultMap="groupBuy">
+        select * from ls_marketing_groupbuy where marketing_id = #{marketingId}
+    </select>
+
+    <update id="updateGroupBuy" parameterType="com.lecshop.marketing.bean.GroupBuy">
+        update ls_marketing_groupbuy set discount = #{discount} where marketing_id = #{marketingId}
+    </update>
+</mapper>

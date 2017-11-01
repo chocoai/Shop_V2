@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.spu.mapper.SpuServicceSupportServiceMapper">
+
+    <resultMap id="spuServiceSupport" type="com.lecshop.spu.bean.SpuServiceSupport">
+        <result column="id" property="id"/>
+        <result column="spu_id" property="spuId"/>
+        <result column="service_support_id" property="serviceSupportId"/>
+        <result column="del_flag" property="delFlag"/>
+    </resultMap>
+
+
+    <insert id="addSpuServicceSupportServices" parameterType="java.util.List">
+        insert into ls_spu_service_support
+
+        (spu_id, service_support_id,del_flag)
+        values
+        <foreach collection="list" item="spuServiceSupport" index="index" separator=",">
+            (
+            #{spuServiceSupport.spuId},
+            #{spuServiceSupport.serviceSupportId},
+            '0'
+            )
+        </foreach>
+    </insert>
+
+    <select id="queryBySpuId" parameterType="java.lang.Long" resultMap="spuServiceSupport">
+        select * from ls_spu_service_support where spu_id = #{spuId} AND  del_flag = '0'
+    </select>
+
+
+    <update id="deleteBySpuId" parameterType="java.lang.Long">
+        update ls_spu_service_support set del_flag = '1' where spu_id = #{spuId}
+    </update>
+
+    <delete id="deleteBySpuIdPhysical" parameterType="java.lang.Long">
+        delete from ls_spu_service_support  where spu_id = #{spuId}
+    </delete>
+</mapper>

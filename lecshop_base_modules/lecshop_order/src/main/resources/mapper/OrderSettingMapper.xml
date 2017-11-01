@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.order.mapper.OrderSettingMapper">
+
+    <resultMap id="orderSettingResult" type="com.lecshop.order.bean.OrderSetting">
+        <result column="id" property="id"/>
+        <result column="allow_back" property="allowBack"/>
+        <result column="aotu_confirm" property="aotuConfirm"/>
+        <result column="refunds_desc" property="refundsDesc"/>
+        <result column="return_desc" property="returnDesc"/>
+        <result column="cashon_delivery" property="cashonDelivery"/>
+    </resultMap>
+
+    <select id="queryOrderSetting" resultMap="orderSettingResult">
+        SELECT id,allow_back,aotu_confirm,refunds_desc,return_desc,cashon_delivery FROM ls_order_setting
+    </select>
+
+    <update id="updateOrderSetting" parameterType="com.lecshop.order.bean.OrderSetting">
+        UPDATE ls_order_setting
+        SET allow_back = #{allowBack},aotu_confirm = #{aotuConfirm},cashon_delivery = #{cashonDelivery},refunds_desc = #{refundsDesc},return_desc=#{returnDesc}
+        WHERE id = #{id}
+    </update>
+</mapper>

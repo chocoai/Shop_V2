@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.distributionset.mapper.DistributionSetMapper">
+    <resultMap id="BaseResult" type="com.lecshop.distributionset.bean.DistributionSet">
+        <result column="id" property="id"/>
+        <result column="store_id" property="storeId"/>
+        <result column="is_open" property="isOpen"/>
+        <result column="fcommission" property="fcommission"/>
+        <result column="scommission" property="scommission"/>
+        <result column="tcommission" property="tcommission"/>
+    </resultMap>
+    <select id="queryDistributionSet" parameterType="java.lang.Long" resultMap="BaseResult">
+        SELECT id,store_id,is_open,fcommission,scommission,tcommission FROM ls_distributionset WHERE store_id=#{storeId}
+    </select>
+    <update id="editDistributionSet" parameterType="com.lecshop.distributionset.bean.DistributionSet">
+        UPDATE ls_distributionset SET is_open=#{isOpen},fcommission=#{fcommission},scommission=#{scommission},tcommission=#{tcommission} WHERE store_id=#{storeId}
+    </update>
+    <insert id="addDistributionSet" parameterType="com.lecshop.distributionset.bean.DistributionSet">
+        INSERT INTO ls_distributionset (store_id,is_open,fcommission,scommission,tcommission) VALUES
+        (#{storeId},#{isOpen},#{fcommission},#{scommission},#{tcommission})
+    </insert>
+    <delete id="deleteDistributionSet" parameterType="java.lang.Long">
+        DELETE FROM ls_distributionset WHERE store_id=#{storeId}
+    </delete>
+</mapper>

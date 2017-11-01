@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.level.mapper.CustomerLevelMapper">
+
+    <resultMap id="customerLevel" type="com.lecshop.level.bean.CustomerLevel">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="min_money" property="minMoney"/>
+        <result column="max_money" property="maxMoney"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="del_time" property="delTime"/>
+    </resultMap>
+
+    <select id="queryAllCustomerLevels" resultMap="customerLevel">
+        select * from ls_customer_level  where del_flag = '0' order by min_money  ASC
+    </select>
+
+    <insert id="addCustomerLevel" parameterType="com.lecshop.level.bean.CustomerLevel">
+        insert into ls_customer_level
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                name,
+            </if>
+            <if test="minMoney != null">
+                min_money,
+            </if>
+            <if test="maxMoney != null">
+                max_money,
+            </if>
+            del_flag,
+            create_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="minMoney != null">
+                #{minMoney},
+            </if>
+            <if test="maxMoney != null">
+                #{maxMoney},
+            </if>
+            '0',
+            now()
+        </trim>
+    </insert>
+
+    <update id="deleteCustomerLevel" parameterType="java.lang.Long">
+        update ls_customer_level set del_flag = '1' , modify_time = now() where id = #{id}
+    </update>
+
+    <select id="queryCustomerLevelById" parameterType="java.lang.Long" resultMap="customerLevel">
+        select * from ls_customer_level where id = #{id} and del_flag = '0'
+    </select>
+
+    <update id="updateCustomerLevel" parameterType="com.lecshop.level.bean.CustomerLevel">
+        update ls_customer_level set name = #{name} , min_money = #{minMoney},max_money=#{maxMoney},modify_time = now() where id = #{id}
+    </update>
+</mapper>

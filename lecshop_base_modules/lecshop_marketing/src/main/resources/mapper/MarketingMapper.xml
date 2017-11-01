@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.marketing.mapper.MarketingMapper">
+
+    <resultMap id="marketing" type="com.lecshop.marketing.bean.Marketing">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="type" property="type"/>
+        <result column="store_id" property="storeId"/>
+        <result column="desc" property="desc"/>
+        <result column="starttime" property="startTime"/>
+        <result column="endtime" property="endTime"/>
+        <result column="del_flag" property="delFlag"/>
+    </resultMap>
+
+    <update id="deleteMarketing" parameterType="java.util.Map">
+        update ls_marketing set del_flag = '1' where id = #{id}  and store_id = #{storeId}
+    </update>
+
+    <update id="updateMarketing" parameterType="com.lecshop.marketing.bean.Marketing">
+        update ls_marketing set name = #{name} , `desc` = #{desc}, starttime = #{startTime} , endtime = #{endTime} where id = #{id} and store_id=#{storeId}
+    </update>
+
+    <select id="queryMarketingById" parameterType="java.util.Map" resultMap="marketing">
+        select * from  ls_marketing  where del_flag = '0' and store_id = #{storeId} and id = #{id}
+    </select>
+
+
+    <insert id="addMarketing" parameterType="com.lecshop.marketing.bean.Marketing" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into ls_marketing
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                name,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="storeId != null">
+                store_id,
+            </if>
+            <if test="desc != null">
+                `desc`,
+            </if>
+            <if test="startTime != null">
+                starttime,
+            </if>
+            <if test="endTime != null">
+                endtime,
+            </if>
+            <if test="delFlag != null">
+                del_flag
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="storeId != null">
+                #{storeId},
+            </if>
+            <if test="desc != null">
+                #{desc},
+            </if>
+            <if test="startTime != null">
+                #{startTime},
+            </if>
+            <if test="endTime != null">
+                #{endTime},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag}
+            </if>
+        </trim>
+    </insert>
+
+    <select id="queryMarketings" parameterType="java.util.Map" resultMap="marketing">
+        select * from ls_marketing
+        where del_flag = '0' and store_id = #{storeId}
+        <if test="name != null and name != '' ">
+            AND name like CONCAT(CONCAT('%', #{name}),'%')
+        </if>
+
+        <if test='type != null and type != "" and  type!= "0"'>
+            AND type = #{type}
+        </if>
+
+        <if test='type=="0"'>
+            AND type in ('1','4','5')
+        </if>
+
+        order by id desc
+        limit #{startRowNum},#{pageSize}
+    </select>
+
+    <select id="queryMarketingCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(1) from ls_marketing
+        where del_flag = '0' and store_id = #{storeId}
+        <if test="name != null and name != '' ">
+            AND name like CONCAT(CONCAT('%', #{name}),'%')
+        </if>
+
+        <if test='type != null and type != "" and  type!= "0"'>
+            AND type = #{type}
+        </if>
+
+        <if test='type=="0"'>
+            AND type in ('1','4','5')
+        </if>
+
+    </select>
+
+    <select id="queryMarketingForShoppingCart" parameterType="java.lang.String" resultMap="marketing">
+        select ls_marketing.* from ls_marketing join ls_sku_marketing on
+        ls_marketing.id = ls_sku_marketing.marketing_id
+        where ls_marketing.del_flag = '0'  and
+        (ls_marketing.type='5' or ls_marketing.type = '4') and
+        <![CDATA[ls_marketing.starttime <= now() and  ls_marketing.endtime > now()]]>
+        and ls_sku_marketing.skuId=#{skuId} limit 1
+    </select>
+
+
+</mapper>

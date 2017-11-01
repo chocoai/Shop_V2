@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.wechatmenu.mapper.WeChatSetMapper">
+    <resultMap id="BaseResult" type="com.lecshop.wechatmenu.bean.WeChatSet">
+        <result column="id" property="id"/>
+        <result column="storeId" property="storeId"/>
+        <result column="appid" property="appId"/>
+        <result column="appsecret" property="appSecret"/>
+        <result column="mchid" property="mchId"/>
+        <result column="apisecret" property="apiSecret"/>
+    </resultMap>
+    <select id="queryWeChatSet" parameterType="java.lang.Long" resultMap="BaseResult">
+        SELECT id,storeId,appid,appsecret,mchid,apisecret FROM ls_wx_setting WHERE storeId=#{storeId}
+    </select>
+    <update id="editStoreWeChatSet" parameterType="com.lecshop.wechatmenu.bean.WeChatSet">
+        UPDATE ls_wx_setting SET appid=#{appId},appsecret=#{appSecret},mchid=#{mchId},apisecret=#{apiSecret} WHERE storeId=#{storeId}
+    </update>
+</mapper>

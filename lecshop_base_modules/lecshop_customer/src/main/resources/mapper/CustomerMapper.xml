@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.customer.mapper.CustomerMapper">
+
+    <resultMap id="customer" type="com.lecshop.customer.bean.Customer">
+        <result column="id" property="id"/>
+        <result column="username" property="userName"/>
+        <result column="password" property="password"/>
+        <result column="nickname" property="nickName"/>
+        <result column="image" property="image"/>
+        <result column="relename" property="releName"/>
+        <result column="cardid" property="cardId"/>
+        <result column="gender" property="gender"/>
+        <result column="birthday " property="birthday"/>
+        <result column="monthly_income" property="monthlyIncome"/>
+        <result column="marriage_status" property="marriageStatus"/>
+        <result column="mobile" property="mobile"/>
+        <result column="email" property="email"/>
+        <result column="province" property="province"/>
+        <result column="city" property="city"/>
+        <result column="county" property="county"/>
+        <result column="detailaddress" property="detailAddress"/>
+        <result column="interest" property="interest"/>
+        <result column="store_id" property="storeId"/>
+        <result column="type" property="type"/>
+        <result column="consumption_amount" property="consumptionAmount"/>
+        <result column="paypassword" property="payPassword"/>
+        <result column="source" property="source"/>
+        <result column="status" property="status"/>
+        <result column="is_mobile_verification" property="isMobileVerification"/>
+        <result column="is_email_verification" property="isEmailVerification"/>
+        <result column="belong_store_id" property="belongStoreId"/>
+        <result column="superior_id" property="superiorId"/>
+        <result column="allcommission" property="allcommission"/>
+        <result column="withdrawopenid" property="withdrawopenid"/>
+        <result column="login_error_count" property="loginErrorCount"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="del_time" property="delTime"/>
+        <result column="lock_time" property="lockTime"/>
+        <result column="last_login_time" property="lastLoginTime"/>
+    </resultMap>
+
+
+    <insert id="addCustomer" parameterType="com.lecshop.customer.bean.Customer">
+        insert into ls_customer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userName != null">
+                username,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="nickName != null">
+                nickname,
+            </if>
+            <if test="image != null">
+                image,
+            </if>
+            <if test="releName != null">
+                relename,
+            </if>
+            <if test="cardId != null">
+                cardid,
+            </if>
+            <if test="gender != null">
+                gender,
+            </if>
+            <if test="birthday != null">
+                birthday,
+            </if>
+            <if test="monthlyIncome != null">
+                monthly_income,
+            </if>
+            <if test="marriageStatus != null">
+                marriage_status,
+            </if>
+            <if test="mobile != null">
+                mobile,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="province != null and province!=0">
+                province,
+            </if>
+            <if test="city != null and city !=0 ">
+                city,
+            </if>
+            <if test="county != null and county!=0">
+                county,
+            </if>
+            <if test="detailAddress != null">
+                detailaddress,
+            </if>
+            <if test="interest != null">
+                interest,
+            </if>
+            <if test="storeId != null">
+                store_id,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="consumptionAmount != null">
+                consumption_amount,
+            </if>
+            <if test="payPassword != null">
+                paypassword,
+            </if>
+            <if test="source != null">
+                source,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="isMobileVerification != null">
+                is_mobile_verification,
+            </if>
+            <if test="isEmailVerification != null">
+                is_email_verification,
+            </if>
+            <if test="withdrawopenid != null">
+                withdrawopenid,
+            </if>
+            <if test="loginErrorCount != null">
+                login_error_count,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="modifyTime != null">
+                modify_time,
+            </if>
+            <if test="delTime != null">
+                del_time,
+            </if>
+            <if test="lockTime != null">
+                lock_time,
+            </if>
+            <if test="lastLoginTime != null">
+                last_login_time
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userName != null">
+                #{userName},
+            </if>
+            <if test="password != null">
+                #{password},
+            </if>
+            <if test="nickName != null">
+                #{nickName},
+            </if>
+            <if test="image != null">
+                #{image},
+            </if>
+            <if test="releName != null">
+                #{releName},
+            </if>
+            <if test="cardId != null">
+                #{cardId},
+            </if>
+            <if test="gender != null">
+                #{gender},
+            </if>
+            <if test="birthday != null">
+                #{birthday},
+            </if>
+            <if test="monthlyIncome != null">
+                #{monthlyIncome},
+            </if>
+            <if test="marriageStatus != null">
+                #{marriageStatus},
+            </if>
+            <if test="mobile != null">
+                #{mobile},
+            </if>
+            <if test="email != null">
+                #{email},
+            </if>
+            <if test="province != null and province!=0">
+                #{province},
+            </if>
+            <if test="city != null and city!=0">
+                #{city},
+            </if>
+            <if test="county != null and county!=0">
+                #{county},
+            </if>
+            <if test="detailAddress != null">
+                #{detailAddress},
+            </if>
+            <if test="interest != null">
+                #{interest},
+            </if>
+            <if test="storeId != null">
+                #{storeId},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="consumptionAmount != null">
+                #{consumptionAmount},
+            </if>
+            <if test="payPassword != null">
+                #{payPassword},
+            </if>
+            <if test="source != null">
+                #{source},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="isMobileVerification != null">
+                #{isMobileVerification},
+            </if>
+            <if test="isEmailVerification != null">
+                #{isEmailVerification},
+            </if>
+            <if test="withdrawopenid != null">
+                #{withdrawopenid},
+            </if>
+            <if test="loginErrorCount != null">
+                #{loginErrorCount},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="modifyTime != null">
+                #{modifyTime},
+            </if>
+            <if test="delTime != null">
+                #{delTime},
+            </if>
+            <if test="lockTime != null">
+                #{lockTime},
+            </if>
+            <if test="lastLoginTime != null">
+                #{lastLoginTime}
+            </if>
+        </trim>
+    </insert>
+
+    <select id="queryCustomers" parameterType="java.util.Map" resultMap="customer">
+        select * from ls_customer
+        where del_flag = '0'
+        <if test="userName != null and userName != '' ">
+            AND username like CONCAT(CONCAT('%', #{userName}),'%')
+        </if>
+
+        <if test="releName != null and releName != ''">
+            AND relename like CONCAT(CONCAT('%', #{releName}),'%')
+        </if>
+
+        <if test="mobile != null and mobile != ''">
+            AND mobile = #{mobile}
+        </if>
+
+        <if test="email != null and email != ''">
+            AND email = #{email}
+        </if>
+
+        <if test="isMobileVerification != null and isMobileVerification != ''">
+            AND is_mobile_verification = #{isMobileVerification}
+        </if>
+
+        <if test="isEmailVerification != null and isEmailVerification != ''">
+            AND is_email_verification = #{isEmailVerification}
+        </if>
+
+        <if test="status != null and status != ''">
+            AND status = #{status}
+        </if>
+
+        <if test="type != null and type != ''">
+            AND type = #{type}
+        </if>
+
+        order by create_time desc
+        limit #{startRowNum},#{pageSize}
+    </select>
+
+    <select id="queryCustomerCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(1) from ls_customer
+        where del_flag = '0'
+        <if test="userName != null and userName != '' ">
+            AND username like CONCAT(CONCAT('%', #{userName}),'%')
+        </if>
+
+        <if test="releName != null and releName != ''">
+            AND relename like CONCAT(CONCAT('%', #{releName}),'%')
+        </if>
+
+        <if test="mobile != null and mobile != ''">
+            AND mobile = #{mobile}
+        </if>
+
+        <if test="email != null and email != ''">
+            AND email = #{email}
+        </if>
+
+        <if test="isMobileVerification != null and isMobileVerification != ''">
+            AND is_mobile_verification = #{isMobileVerification}
+        </if>
+
+        <if test="isEmailVerification != null and isEmailVerification != ''">
+            AND is_email_verification = #{isEmailVerification}
+        </if>
+
+        <if test="status != null and status != ''">
+            AND status = #{status}
+        </if>
+
+        <if test="type != null and type != ''">
+            AND type = #{type}
+        </if>
+    </select>
+
+    <select id="queryCustomerById" parameterType="java.lang.Long" resultMap="customer">
+        select * from ls_customer where id = #{id} and del_flag = '0'
+    </select>
+
+    <update id="deleteCustomers" parameterType="java.util.List">
+        update ls_customer set del_flag = '1' , del_time = now() where id in
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="updateCustomer" parameterType="com.lecshop.customer.bean.Customer">
+        update ls_customer
+        <set>
+            <if test="userName != null">
+                username = #{userName},
+            </if>
+            <if test="nickName != null">
+                nickname = #{nickName},
+            </if>
+            <if test="image != null">
+                image = #{image},
+            </if>
+            <if test="releName != null">
+                relename = #{releName},
+            </if>
+            <if test="cardId != null">
+                cardid = #{cardId},
+            </if>
+            <if test="gender != null">
+                gender = #{gender},
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday},
+            </if>
+            <if test="monthlyIncome != null">
+                monthly_income = #{monthlyIncome},
+            </if>
+            <if test="marriageStatus != null">
+                marriage_status = #{marriageStatus},
+            </if>
+            <if test="province != null">
+                province = #{province},
+            </if>
+            <if test="city != null">
+                city = #{city},
+            </if>
+            <if test="county != null">
+                county = #{county},
+            </if>
+            <if test="detailAddress != null">
+                detailaddress = #{detailAddress},
+            </if>
+            <if test="interest != null">
+                interest = #{interest},
+            </if>
+            modify_time = now()
+        </set>
+        where id = #{id}
+    </update>
+    <select id="customerStoreLogin" parameterType="java.lang.String" resultMap="customer">
+        SELECT * FROM ls_customer where del_flag = '0' AND username=#{username}
+    </select>
+    <update id="updateLoginTime" parameterType="java.lang.Long">
+        UPDATE ls_customer SET last_login_time=now() WHERE id=#{customerId}
+    </update>
+    <select id="queryCustomerIdByStoreId" parameterType="java.lang.Long" resultMap="customer">
+        SELECT * FROM ls_customer WHERE `type`='2' AND status='1' AND del_flag='0' AND store_id=#{storeId}
+    </select>
+
+    <resultMap id="customerAndRole" type="com.lecshop.customer.bean.StoreStaff">
+        <result column="id" property="id"/>
+        <result column="username" property="userName"/>
+        <result column="relename" property="releName"/>
+        <result column="store_id" property="storeId"/>
+        <result column="type" property="type"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="last_login_time" property="lastLoginTime"/>
+        <result column="role_id" property="roleId"/>
+        <result column="name" property="roleName"/>
+    </resultMap>
+    <select id="queryStoreStall" parameterType="java.util.Map" resultMap="customerAndRole">
+        SELECT lc.id,lc.username,lc.nickname,lc.relename,lc.store_id,lc.`type`,lc.`status`,lc.last_login_time,lc.create_time,
+        custoer_role.role_id,custoer_role.`name` FROM ls_customer AS lc
+        JOIN (SELECT lcr.customer_id,lcr.role_id,lsr.name FROM ls_customer_role as lcr JOIN ls_store_role as lsr ON lcr.role_id=lsr.id
+        WHERE lsr.store_id=#{storeId}) AS custoer_role
+        ON lc.id=custoer_role.customer_id where del_flag = '0' AND store_id=#{storeId} AND `type`=3
+        <if test="name != null and name != '' ">
+            AND username like CONCAT(CONCAT('%', #{name}),'%')
+        </if>
+        ORDER BY create_time DESC
+        limit #{startRowNum},#{pageSize}
+    </select>
+    <select id="queryStoreStallCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(1) from ls_customer
+        where del_flag = '0' AND store_id=#{storeId} AND `type`=3
+        <if test="name != null and name != '' ">
+            AND username like CONCAT(CONCAT('%', #{name}),'%')
+        </if>
+    </select>
+    <insert id="addStoreStaff" parameterType="com.lecshop.customer.bean.StoreStaff" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO ls_customer(consumption_amount,login_error_count,source,username,password,relename,store_id,`type`,status,create_time)
+        VALUES (0.00,0,'4',#{userName},#{password},#{releName},#{storeId},#{type},#{status},now());
+    </insert>
+    <update id="updateStatus" parameterType="com.lecshop.customer.bean.StoreStaff">
+        UPDATE ls_customer SET status=#{status} WHERE id=#{id}
+    </update>
+    <update id="updatePassWord" parameterType="com.lecshop.customer.bean.Customer">
+        UPDATE ls_customer SET password=#{password} WHERE id=#{id}
+    </update>
+    <update id="updateStoreIdAndType" parameterType="com.lecshop.customer.bean.Customer">
+        UPDATE ls_customer SET store_id=#{storeId},`type`=#{type} WHERE id=#{id}
+    </update>
+    <update id="updatePersonalInfo" parameterType="java.util.Map">
+        UPDATE ls_customer SET
+        <if test="param == 1">
+            nickname=#{customer.nickName},gender=#{customer.gender},birthday=#{customer.birthday},relename=#{customer.releName}
+        </if>
+        <if test="param == 2">
+            image=#{customer.image}
+        </if>
+        <if test="param == 3">
+            monthly_income=#{customer.monthlyIncome},marriage_status=#{customer.marriageStatus},cardid=#{customer.cardId}
+        </if>
+        WHERE id=#{customer.id}
+    </update>
+</mapper>

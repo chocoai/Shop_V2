@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.baseinfo.mapper.BaseInfoSetMapper">
+    <resultMap id="BaseResult" type="com.lecshop.baseinfo.bean.BaseInfoSet">
+        <result column="id" property="id"/>
+        <result column="phone" property="phone"/>
+        <result column="logo" property="logo"/>
+        <result column="site_url" property="siteUrl"/>
+        <result column="label_log" property="labelLog"/>
+        <result column="admin_logo" property="adminLogo"/>
+        <result column="captcha_open" property="captchaOpen"/>
+        <result column="site_login" property="siteLoginPic"/>
+        <result column="store_login" property="storeLoginPic"/>
+        <result column="site_register" property="siteRegisterPic"/>
+        <result column="store_register" property="storeRegisterPic"/>
+        <result column="copyright_info" property="copyrightInfo"/>
+        <result column="admin_index_logo" property="adminIndexLogo"/>
+        <result column="store_open_protocol" property="storeOpenProtocol"/>
+        <result column="register_protocol" property="siteRegisterProtocol"/>
+        <result column="store_register_protocol" property="storeRegisterProtocol"/>
+        <result column="store_spu_audit" property="storeSpuAudit"/>
+    </resultMap>
+    <sql id="columnList">
+        id,phone,logo,site_url,label_log,admin_logo,captcha_open,site_login,store_login,site_register,store_register,copyright_info,admin_index_logo,
+        store_open_protocol,register_protocol,store_register_protocol,store_spu_audit
+    </sql>
+    <select id="queryBaseInfoSet" resultMap="BaseResult">
+        SELECT
+        <include refid="columnList"/>
+        FROM ls_system_setting
+    </select>
+
+    <update id="editBaseInfoSetA" parameterType="com.lecshop.baseinfo.bean.BaseInfoSet">
+        UPDATE ls_system_setting SET
+        phone=#{phone},logo=#{logo},site_url=#{siteUrl},label_log=#{labelLog},admin_logo=#{adminLogo},
+        site_login=#{siteLoginPic},store_login=#{storeLoginPic},site_register=#{siteRegisterPic},store_register=#{storeRegisterPic},
+        copyright_info=#{copyrightInfo},admin_index_logo=#{adminIndexLogo},store_open_protocol=#{storeOpenProtocol},register_protocol=#{siteRegisterProtocol},
+        store_register_protocol=#{storeRegisterProtocol},store_spu_audit=#{storeSpuAudit}
+    </update>
+    <update id="editBaseInfoSetB" parameterType="com.lecshop.baseinfo.bean.BaseInfoSet">
+        UPDATE ls_system_setting SET captcha_open = #{captchaOpen}
+    </update>
+    <update id="setAuditSwitch" parameterType="java.lang.String">
+        UPDATE ls_system_setting SET store_spu_audit = #{storeSpuAudit}
+    </update>
+</mapper>

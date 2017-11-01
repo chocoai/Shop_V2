@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.spu.mapper.SpuSpecValueMapper">
+
+    <resultMap id="spuSpecValue" type="com.lecshop.spu.bean.SpuSpecValue">
+        <result column="id" property="id"/>
+        <result column="spu_id" property="spuId"/>
+        <result column="spec_id" property="specId"/>
+        <result column="spec_value_id" property="specValueId"/>
+        <result column="url" property="url"/>
+        <result column="value_remark" property="valueRemark"/>
+        <result column="del_flag" property="delFlag"/>
+    </resultMap>
+
+
+    <insert id="addSpuSpecValues" parameterType="java.util.List">
+        insert into ls_spu_spec_value
+        (spu_id, spec_id,spec_value_id,url,value_remark,del_flag)
+        values
+        <foreach collection="list" item="spuSpecValue" index="index" separator=",">
+            (
+            #{spuSpecValue.spuId},
+            #{spuSpecValue.specId},
+            #{spuSpecValue.specValueId},
+            #{spuSpecValue.url},
+            #{spuSpecValue.valueRemark},
+            '0'
+            )
+        </foreach>
+    </insert>
+
+
+    <select id="queryBySpuId" parameterType="java.lang.Long" resultMap="spuSpecValue">
+        select * from ls_spu_spec_value where spu_id = #{spuId} and del_flag = '0'
+    </select>
+
+    <update id="deleteBySpuId" parameterType="java.lang.Long">
+        update ls_spu_spec_value set del_flag = '1' where spu_id = #{spuId}
+    </update>
+
+    <delete id="deleteBySpuIdPhysical" parameterType="java.lang.Long">
+        delete from ls_spu_spec_value where spu_id = #{spuId}
+    </delete>
+
+    <select id="queryCountBySpecId" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        select count(1) from ls_spu_spec_value where spec_id = #{specId} and del_flag = '0'
+    </select>
+
+
+    <select id="queryCountBySpecValueId" parameterType="java.lang.String" resultType="java.lang.Integer">
+      select count(1) from ls_spu_spec_value where spec_value_id = #{specValueId} and del_flag = '0'
+    </select>
+</mapper>

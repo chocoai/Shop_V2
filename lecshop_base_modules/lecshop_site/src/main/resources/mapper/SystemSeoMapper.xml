@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.seosetting.mapper.SystemSeoMapper">
+
+    <resultMap id="systemSeoResult" type="com.lecshop.seosetting.bean.SystemSeo">
+        <result column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="key_word" property="keyWord"/>
+        <result column="seo_desc" property="seoDesc"/>
+        <result column="is_open" property="isOpen"/>
+    </resultMap>
+
+    <select id="querySystemSeo" resultMap="systemSeoResult">
+        SELECT id,title,key_word,seo_desc,is_open FROM ls_system_seo
+    </select>
+
+    <update id="updateSystemSeo" parameterType="com.lecshop.seosetting.bean.SystemSeo">
+        UPDATE ls_system_seo SET title = #{title}, key_word = #{keyWord}, seo_desc = #{seoDesc}, is_open = #{isOpen} WHERE id = 1
+    </update>
+
+</mapper>

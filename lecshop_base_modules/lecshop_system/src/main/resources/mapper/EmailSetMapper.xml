@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.emailset.mapper.EmailSetMapper">
+    <resultMap id="BaseResult" type="com.lecshop.emailset.bean.EmailSet">
+        <result column="id" property="id"/>
+        <result column="sender_mail" property="senderEmail"/>
+        <result column="sender_name" property="senderName"/>
+        <result column="smtp_server" property="smtpServer"/>
+        <result column="smtp_port" property="smtpPort"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+    </resultMap>
+    <select id="queryEmailSet" resultMap="BaseResult">
+        SELECT id,sender_mail,sender_name,smtp_server,smtp_port,username,password FROM ls_email_setting
+    </select>
+
+    <update id="editEmailSet" parameterType="com.lecshop.emailset.bean.EmailSet">
+        UPDATE ls_email_setting SET sender_mail=#{senderEmail},sender_name=#{senderName},smtp_server=#{smtpServer},
+        smtp_port=#{smtpPort},username=#{username},password=#{password} WHERE id=#{id}
+    </update>
+</mapper>

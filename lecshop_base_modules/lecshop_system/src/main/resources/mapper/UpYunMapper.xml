@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.upyun.mapper.UpYunMapper">
+
+    <resultMap id="upYunSetting" type="com.lecshop.upyun.bean.UpYunSetting">
+        <id column="id" property="id"/>
+        <id column="username" property="userName"/>
+        <id column="password" property="password"/>
+        <id column="name_space" property="nameSpace"/>
+        <id column="address" property="address"/>
+        <id column="modify_time" property="modifyTime"/>
+    </resultMap>
+
+
+    <select id="queryUpYunSetting" resultMap="upYunSetting">
+		select * from ls_upyun_setting
+	</select>
+
+    <update id="updateUpYun" parameterType="com.lecshop.upyun.bean.UpYunSetting">
+        update ls_upyun_setting set username = #{userName},password=#{password},name_space=#{nameSpace},
+        address=#{address},modify_time=now() where id = #{id}
+    </update>
+</mapper>

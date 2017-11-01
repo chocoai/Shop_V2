@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.category.mapper.CategoryMapper">
+
+    <resultMap id="category" type="com.lecshop.category.bean.Category">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="type_id" property="typeId"/>
+        <result column="grade" property="grade"/>
+        <result column="rate" property="rate"/>
+        <result column="sort" property="sort"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="create_name" property="createName"/>
+        <result column="modify_name" property="modifyName"/>
+        <result column="del_name" property="delName"/>
+        <result column="create_time " property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="del_time" property="delTime"/>
+    </resultMap>
+
+    <insert id="addCategory" parameterType="com.lecshop.category.bean.Category">
+        insert into ls_category
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                name,
+            </if>
+            <if test="parentId != null">
+                parent_id,
+            </if>
+            <if test="typeId != null">
+                type_id,
+            </if>
+            <if test="grade != null">
+                grade,
+            </if>
+            <if test="rate != null">
+                rate,
+            </if>
+            <if test="sort != null">
+                sort,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+            <if test="createName != null">
+                create_name,
+            </if>
+            <if test="modifyName != null">
+                modify_name,
+            </if>
+            <if test="delName != null">
+                del_name,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="modifyTime != null">
+                modify_time,
+            </if>
+            <if test="delTime != null">
+                del_time
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="parentId != null">
+                #{parentId},
+            </if>
+            <if test="typeId != null">
+                #{typeId},
+            </if>
+            <if test="grade != null">
+                #{grade},
+            </if>
+            <if test="rate != null">
+                #{rate},
+            </if>
+            <if test="sort != null">
+                #{sort},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag},
+            </if>
+            <if test="createName != null">
+                #{createName},
+            </if>
+            <if test="modifyName != null">
+                #{modifyName},
+            </if>
+            <if test="delName != null">
+                #{delName},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="modifyTime != null">
+                #{modifyTime},
+            </if>
+            <if test="delTime != null">
+                #{delTime}
+            </if>
+        </trim>
+    </insert>
+
+    <select id="queryCategoryById" parameterType="java.lang.Long" resultMap="category">
+        select * from ls_category where id = #{id} and del_flag = '0'
+    </select>
+
+    <select id="queryCategoryByParentId" parameterType="java.lang.Long" resultMap="category">
+        select * from ls_category where parent_id = #{parentId} and del_flag = '0' order by sort asc
+    </select>
+
+
+    <update id="deleteCategory" parameterType="com.lecshop.category.bean.Category">
+        update ls_category
+        <set>
+            <if test="delFlag != null">
+                del_flag = #{delFlag},
+            </if>
+            <if test="delName != null">
+                del_name = #{delName},
+            </if>
+            <if test="delTime != null">
+                del_time = #{delTime}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+
+    <update id="updateCategory" parameterType="com.lecshop.category.bean.Category">
+        update ls_category
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="parentId != null">
+                parent_id = #{parentId},
+            </if>
+            <if test="typeId != null">
+                type_id = #{typeId},
+            </if>
+            <if test="rate != null">
+                rate = #{rate},
+            </if>
+            <if test="sort != null">
+                sort = #{sort},
+            </if>
+            <if test="modifyName != null">
+                modify_name = #{modifyName},
+            </if>
+            <if test="modifyTime != null">
+                modify_time = #{modifyTime}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="queryAllFirstAndSecondCategory" resultMap="category">
+        SELECT * FROM ls_category WHERE grade!='3' AND del_flag='0'
+    </select>
+    <select id="queryThreeCategoryByStoreId" parameterType="java.lang.Long" resultMap="category">
+        SELECT ls_category.* FROM ls_category JOIN ls_store_signed_category ON ls_store_signed_category.cate_id=ls_category.id
+        WHERE ls_store_signed_category.store_id=#{storeId}
+    </select>
+    <select id="queryTwoCategoryByStoreId" parameterType="java.lang.Long" resultMap="category">
+        SELECT * FROM ls_category WHERE id IN (SELECT parent_id FROM ls_category WHERE id IN (SELECT cate_id FROM ls_store_signed_category WHERE store_id=#{storeId}))
+    </select>
+</mapper>

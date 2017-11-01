@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.shoppingcart.mapper.ShoppingCartMapper">
+
+    <resultMap id="province" type="com.lecshop.shoppingcart.bean.ShoppingCart">
+        <result column="id" property="id"/>
+        <result column="customer_id" property="customerId"/>
+        <result column="sku_id" property="skuId"/>
+        <result column="num" property="num"/>
+        <result column="marketing_id" property="marketingId"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="create_time " property="createTime"/>
+    </resultMap>
+
+
+    <insert id="addShoppingCart" parameterType="com.lecshop.shoppingcart.bean.ShoppingCart">
+        insert into ls_shopping_cart
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="customerId != null">
+                customer_id,
+            </if>
+            <if test="skuId != null">
+                sku_id,
+            </if>
+            <if test="num != null">
+                num,
+            </if>
+            <if test="marketingId != 0">
+                marketing_id,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+            <if test="createTime != null">
+                create_time
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="customerId != null">
+                #{customerId},
+            </if>
+            <if test="skuId != null">
+                #{skuId},
+            </if>
+            <if test="num != null">
+                #{num},
+            </if>
+            <if test="marketingId != 0">
+                #{marketingId},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag},
+            </if>
+            <if test="createTime != null">
+                #{createTime}
+            </if>
+        </trim>
+    </insert>
+
+
+    <select id="queryBySkuIdAndCustomerIdCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(1) from ls_shopping_cart where  del_flag = '0'  and customer_id=#{customerId} and sku_id=#{skuId}
+    </select>
+
+
+    <update id="updateShoppingCartNum" parameterType="java.util.Map">
+        update ls_shopping_cart
+        set num  = num + #{num}
+       where  del_flag = '0'  and customer_id=#{customerId} and sku_id=#{skuId}
+    </update>
+
+</mapper>

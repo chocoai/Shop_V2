@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.logistics.mapper.LogisticsCompanyMapper">
+
+    <resultMap id="logisticsCompany" type="com.lecshop.logistics.bean.LogisticsCompany">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="code" property="code"/>
+        <result column="express100_code" property="express100Code"/>
+        <result column="store_id" property="storeId"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="create_time " property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="del_time" property="delTime"/>
+    </resultMap>
+
+    <insert id="addLogisticsCompany" parameterType="com.lecshop.logistics.bean.LogisticsCompany">
+        insert into ls_logistics_company
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                name,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="express100Code != null">
+                express100_code,
+            </if>
+            store_id,
+            del_flag,
+            create_time,
+            <if test="modifyTime != null">
+                modify_time,
+            </if>
+            <if test="delTime != null">
+                del_time
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="code != null">
+                #{code},
+            </if>
+            <if test="express100Code != null">
+                #{express100Code},
+            </if>
+            #{storeId},
+            '0',
+            now(),
+            <if test="modifyTime != null">
+                #{modifyTime},
+            </if>
+            <if test="delTime != null">
+                #{delTime}
+            </if>
+        </trim>
+    </insert>
+
+
+    <select id="queryLogisticsCompanys" parameterType="java.util.Map" resultMap="logisticsCompany">
+        select * from ls_logistics_company
+        where del_flag = '0' and store_id = #{storeId}
+        <if test="name != null and name != '' ">
+            AND name like CONCAT(CONCAT('%', #{name}),'%')
+        </if>
+
+        order by create_time desc
+        limit #{startRowNum},#{pageSize}
+    </select>
+
+    <select id="queryLogisticsCompanyCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(1) from ls_logistics_company
+        where del_flag = '0' and store_id = #{storeId}
+        <if test="name != null and name != '' ">
+            AND name like CONCAT(CONCAT('%', #{name}),'%')
+        </if>
+    </select>
+
+
+    <update id="deleteLogisticsCompany" parameterType="java.lang.Long">
+        update ls_logistics_company
+        set del_flag ='1',del_time = now()
+        where id = #{id} and store_id = #{storeId}
+    </update>
+
+    <select id="queryLogisticsCompanyById" parameterType="java.lang.Long" resultMap="logisticsCompany">
+        select * from ls_logistics_company where id = #{id} and del_flag = '0'
+        <if test="storeId != null and storeId != -1">
+            and store_id = #{storeId}
+        </if>
+    </select>
+
+
+    <update id="updateLogisticsCompany" parameterType="com.lecshop.logistics.bean.LogisticsCompany">
+        update ls_logistics_company
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="code != null">
+                code = #{code},
+            </if>
+            <if test="express100Code != null">
+                express100_code = #{express100Code},
+            </if>
+            modify_time = now()
+        </set>
+        where id = #{id} and store_id = #{storeId}
+    </update>
+
+    <select id="queryCanUseCompany" parameterType="java.lang.Long" resultMap="logisticsCompany">
+        select * from ls_logistics_company where id not in (select company_id from ls_logistics_template where store_id = #{storeId} and del_flag = '0') and store_id = #{storeId} and del_flag = '0'
+    </select>
+</mapper>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.sku.mapper.SkuSpecValueMapper">
+
+    <resultMap id="specValue" type="com.lecshop.sku.bean.SkuSpecValue">
+        <result column="id" property="id"/>
+        <result column="spu_id" property="spuId"/>
+        <result column="sku_id" property="skuId"/>
+        <result column="spec_id" property="specId"/>
+        <result column="spec_value_id" property="specValueId"/>
+        <result column="value_remark" property="valueRemark"/>
+        <result column="del_flag" property="delFlag"/>
+    </resultMap>
+
+
+    <insert id="addSkuSpecValues" parameterType="java.util.List">
+        insert into ls_sku_spec_value
+        (spu_id,sku_id, spec_id,spec_value_id,value_remark,del_flag)
+        values
+        <foreach collection="list" item="skuSpecValue" index="index" separator=",">
+            (
+            #{skuSpecValue.spuId},
+            #{skuSpecValue.skuId},
+            #{skuSpecValue.specId},
+            #{skuSpecValue.specValueId},
+            #{skuSpecValue.valueRemark},
+            '0'
+            )
+        </foreach>
+    </insert>
+
+    <select id="queryBySkuId" parameterType="java.lang.String" resultMap="specValue">
+        select * from ls_sku_spec_value where sku_id = #{skuId} and del_flag = '0'
+    </select>
+
+
+    <update id="deleteBySpuId" parameterType="java.lang.Long">
+        update ls_sku_spec_value set del_flag = '1' where spu_id = #{spuId}
+    </update>
+
+    <delete id="deleteBySpuIdPhysical" parameterType="java.lang.Long">
+         delete from ls_sku_spec_value  where spu_id = #{spuId}
+    </delete>
+</mapper>

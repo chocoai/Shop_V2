@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.exceptionpage.mapper.ExceptionPageMapper">
+    <resultMap id="BaseResult" type="com.lecshop.exceptionpage.bean.ExceptionPage">
+        <result column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="type" property="type"/>
+        <result column="is_use" property="isUse"/>
+        <result column="desc" property="desc"/>
+    </resultMap>
+    <select id="queryExceptionPage" resultMap="BaseResult">
+        SELECT id,title,`type`,is_use,`desc` FROM ls_error_setting
+    </select>
+    <update id="editExceptionPage" parameterType="com.lecshop.exceptionpage.bean.ExceptionPage">
+        UPDATE ls_error_setting SET title = #{title},is_use=#{isUse},`desc`=#{desc} WHERE `type`=#{type}
+    </update>
+</mapper>

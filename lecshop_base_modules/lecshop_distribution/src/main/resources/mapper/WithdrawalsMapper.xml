@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.distributionwithdrawals.mapper.WithdrawalsMapper">
+
+    <resultMap id="WithdrawalsResult" type="com.lecshop.distributionwithdrawals.bean.Withdrawals">
+        <result column="id" property="id"/>
+        <result column="tradeno" property="tradeno"/>
+        <result column="storeId" property="storeId"/>
+        <result column="customerid" property="customerid"/>
+        <result column="amount" property="amount"/>
+        <result column="status" property="status"/>
+        <result column="reason" property="reason"/>
+        <result column="applytime" property="applytime"/>
+        <result column="paytime" property="paytime"/>
+    </resultMap>
+
+    <select id="queryWithdrawals" parameterType="java.util.Map" resultMap="WithdrawalsResult">
+        SELECT
+        id,tradeno,storeId,customerid,amount,status,reason,applytime,paytime
+        FROM ls_withdrawals WHERE storeId = #{storeId}
+        <if test="tradeno != null and !''.equals(tradeno)">
+            AND tradeno = #{tradeno}
+        </if>
+        ORDER BY applytime DESC
+        limit #{startRowNum},#{pageSize}
+    </select>
+
+    <select id="queryWithdrawalsCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM ls_withdrawals WHERE storeId = #{storeId}
+        <if test="tradeno != null and !''.equals(tradeno)">
+            AND tradeno = #{tradeno}
+        </if>
+    </select>
+
+    <update id="refuseApply" parameterType="com.lecshop.distributionwithdrawals.bean.Withdrawals">
+        UPDATE ls_withdrawals SET status = #{status}, reason = #{reason} WHERE id = #{id} AND storeId = #{storeId}
+    </update>
+
+    <update id="rejectApply" parameterType="com.lecshop.distributionwithdrawals.bean.Withdrawals">
+        UPDATE ls_withdrawals SET status = #{status} WHERE id = #{id} AND storeId = #{storeId}
+    </update>
+
+    <update id="passApply" parameterType="com.lecshop.distributionwithdrawals.bean.Withdrawals">
+        UPDATE ls_withdrawals SET status = #{status} WHERE id = #{id} AND storeId = #{storeId}
+    </update>
+
+</mapper>

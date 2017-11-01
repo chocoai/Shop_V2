@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.spu.mapper.SpuImageMapper">
+
+    <resultMap id="spuImage" type="com.lecshop.spu.bean.SpuImage">
+        <result column="id" property="id"/>
+        <result column="spu_id" property="spuId"/>
+        <result column="url" property="url"/>
+        <result column="del_flag" property="delFlag"/>
+    </resultMap>
+
+
+    <insert id="addSpuImages" parameterType="java.util.List">
+        insert into ls_spu_image
+        (spu_id, url,del_flag)
+        values
+        <foreach collection="list" item="spuImage" index="index" separator=",">
+            (
+            #{spuImage.spuId},
+            #{spuImage.url},
+            #{spuImage.delFlag}
+            )
+        </foreach>
+    </insert>
+
+
+
+    <update id="deleteBySpuId" parameterType="java.lang.Long">
+        update ls_spu_image set del_flag = '1' where spu_id = #{spuId}
+    </update>
+
+    <select id="queryBySpuId" parameterType="java.lang.Long" resultMap="spuImage">
+        select * from ls_spu_image where spu_id = #{spuId}  and del_flag = '0'
+    </select>
+
+    <delete id="deleteBySpuIdPhysical" parameterType="java.lang.Long">
+        delete from ls_spu_image where spu_id = #{spuId}
+    </delete>
+
+</mapper>

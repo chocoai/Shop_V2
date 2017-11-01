@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.openstore.mapper.StoreInfoMapper">
+    <resultMap id="BaseResult" type="com.lecshop.openstore.bean.StoreInfo">
+        <id column="id" property="id"/>
+        <result column="store_name" property="storeName"/>
+        <result column="status" property="status"/>
+        <result column="company_name" property="companyName"/>
+        <result column="company_address" property="companyAddress"/>
+        <result column="company_phone" property="companyPhone"/>
+        <result column="company_email" property="companyEmail"/>
+        <result column="contact_person" property="contactPerson"/>
+        <result column="contact_phone" property="contactPhone"/>
+        <result column="legal_person" property="legalPerson"/>
+        <result column="card_no" property="cardNo"/>
+        <result column="card_pic" property="carPic"/>
+        <result column="bus_licenec" property="busLicense"/>
+        <result column="bus_licenec_pic" property="busLicensePic"/>
+        <result column="org_pic" property="orgPic"/>
+        <result column="tax_pic" property="taxPic"/>
+        <result column="bank_user_name" property="bankUserName"/>
+        <result column="bank_account" property="bankAccount"/>
+        <result column="bank_name" property="bankName"/>
+        <result column="bank_number" property="bankNumber"/>
+        <result column="bank_address" property="bankAddress"/>
+        <result column="bank_pic" property="bankPic"/>
+        <result column="billing_cycle" property="billingCycle"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="effective_time" property="effectiveTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="del_time" property="delTime"/>
+        <result column="ismerge" property="isMerge"/>
+        <result column="service_qq" property="serviceQQ"/>
+        <result column="reason" property="reason"/>
+    </resultMap>
+    <select id="queryStoreInfo" parameterType="java.lang.Long" resultMap="BaseResult">
+        SELECT id,store_name,status,company_name,company_address,company_phone,company_email,contact_person,contact_phone,legal_person,card_no,
+        card_pic,bus_licenec,bus_licenec_pic,org_pic,tax_pic,bank_user_name,bank_account,bank_name,bank_number,bank_address,bank_pic,billing_cycle,
+        del_flag,effective_time,create_time,modify_time,del_time,ismerge,service_qq,reason FROM ls_store_info WHERE id=#{storeId} AND del_flag='0'
+    </select>
+    <select id="queryAuditPassStoreInfo" parameterType="java.lang.Long" resultMap="BaseResult">
+        SELECT * FROM ls_store_info WHERE id=#{storeId} AND del_flag='0' AND status='2'
+    </select>
+    <insert id="addStoreInfo" parameterType="com.lecshop.openstore.bean.StoreInfo" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO ls_store_info
+        (status,company_name,company_address,company_phone,company_email,contact_person,contact_phone,legal_person,card_no,card_pic,bus_licenec,bus_licenec_pic,
+        org_pic,tax_pic,del_flag,effective_time,create_time,ismerge) VALUES
+        (#{status},#{companyName},#{companyAddress},#{companyPhone},#{companyEmail},#{contactPerson},#{contactPhone},#{legalPerson},#{cardNo},#{carPic},#{busLicense},
+        #{busLicensePic},#{orgPic},#{taxPic},'0',#{effectiveTime},#{createTime},#{isMerge})
+    </insert>
+    <update id="editStoreInfo" parameterType="com.lecshop.openstore.bean.StoreInfo">
+        UPDATE ls_store_info SET company_name=#{companyName},company_address=#{companyAddress},company_phone=#{companyPhone},company_email=#{companyEmail},contact_person=#{contactPerson},
+        contact_phone=#{contactPhone},legal_person=#{legalPerson},card_no=#{cardNo},card_pic=#{carPic},bus_licenec=#{busLicense},bus_licenec_pic=#{busLicensePic},org_pic=#{orgPic},tax_pic=#{taxPic},
+        del_flag='0',effective_time=#{effectiveTime},create_time=#{createTime},ismerge=#{isMerge} WHERE id=#{id}
+    </update>
+    <update id="editStoreName" parameterType="com.lecshop.openstore.bean.StoreInfo">
+        UPDATE ls_store_info SET store_name=#{storeName},status=#{status} WHERE id=#{id}
+    </update>
+    <select id="queryStoreInfoByName" parameterType="java.lang.String" resultMap="BaseResult">
+        SELECT * FROM ls_store_info WHERE store_name=#{storeName}
+    </select>
+    <select id="queryStoreInfoForAuditListCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT COUNT(1) FROM ls_store_info WHERE del_flag='0' AND
+        <if test='status =="2"'>
+            (status=#{status} OR status='4')
+        </if>
+        <if test='status !="2"'>
+            status=#{status}
+        </if>
+        <if test="companyName != null and companyName != '' ">
+            AND company_name = #{companyName}
+        </if>
+        <if test="storeName != null and storeName != '' ">
+            AND store_name = #{storeName}
+        </if>
+    </select>
+    <select id="queryStoreInfoForAuditList" resultMap="BaseResult" parameterType="java.util.Map">
+        SELECT * FROM ls_store_info WHERE del_flag='0' AND
+        <if test='status =="2"'>
+            (status=#{status} OR status='4')
+        </if>
+        <if test='status !="2"'>
+            status=#{status}
+        </if>
+        <if test="companyName != null and companyName != '' ">
+            AND company_name = #{companyName}
+        </if>
+        <if test="storeName != null and storeName != '' ">
+            AND store_name = #{storeName}
+        </if>
+        ORDER BY create_time DESC
+        limit #{startRowNum},#{pageSize}
+    </select>
+    <update id="editStoreTimeAndIsClose" parameterType="com.lecshop.openstore.bean.StoreInfo">
+        UPDATE ls_store_info SET billing_cycle=#{billingCycle},effective_time=#{effectiveTime},status=#{status}
+        WHERE id=#{id}
+    </update>
+    <update id="passStoreAudit" parameterType="com.lecshop.openstore.bean.StoreInfo">
+        UPDATE ls_store_info SET status = #{status},billing_cycle = #{billingCycle} WHERE id = #{id}
+    </update>
+    <update id="refuseStoreAudit" parameterType="com.lecshop.openstore.bean.StoreInfo">
+        UPDATE ls_store_info SET status = #{status},reason = #{reason} WHERE id = #{id}
+    </update>
+    <update id="deleteStore" parameterType="java.lang.Long">
+        UPDATE ls_store_info SET del_flag='1' WHERE id = #{id}
+    </update>
+    <update id="editStoreInfoForServiceQQ" parameterType="com.lecshop.openstore.bean.StoreInfo">
+        UPDATE ls_store_info SET service_qq=#{serviceQQ} WHERE id = #{id}
+    </update>
+    <update id="editStoreInfoForCompanyInfo" parameterType="com.lecshop.openstore.bean.StoreInfo">
+        UPDATE ls_store_info SET company_phone=#{companyPhone},contact_person=#{contactPerson},contact_phone=#{contactPhone},
+        legal_person=#{legalPerson},card_no=#{cardNo},bus_licenec=#{busLicense},bus_licenec_pic=#{busLicensePic},card_pic=#{carPic}
+        WHERE id = #{id}
+    </update>
+    <update id="editStoreInfoForBankInfo" parameterType="com.lecshop.openstore.bean.StoreInfo">
+        UPDATE ls_store_info SET bank_user_name=#{bankUserName},bank_account=#{bankAccount},bank_name=#{bankName},bank_number=#{bankNumber},
+        bank_address=#{bankAddress},bank_pic=#{bankPic} WHERE id = #{id}
+    </update>
+</mapper>

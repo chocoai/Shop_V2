@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.logistics.mapper.ShippingMethodAreaMapper">
+
+    <resultMap id="shippingMethodArea" type="com.lecshop.logistics.bean.ShippingMethodArea">
+        <result column="id" property="id"/>
+        <result column="shipping_method_id" property="shippingMethodId"/>
+        <result column="template_id" property="templateId"/>
+        <result column="city_id" property="cityId"/>
+    </resultMap>
+
+    <insert id="addShippingMethodAreas" parameterType="java.util.List">
+        insert into ls_shipping_method_area
+        (shipping_method_id,template_id, city_id)
+        values
+        <foreach collection="list" item="shippingMethodArea" index="index" separator=",">
+            (
+            #{shippingMethodArea.shippingMethodId},
+            #{shippingMethodArea.templateId},
+            #{shippingMethodArea.cityId}
+            )
+        </foreach>
+    </insert>
+
+    <select id="queryByShippingMethodId" parameterType="java.lang.Long" resultMap="shippingMethodArea">
+        select * from ls_shipping_method_area where shipping_method_id = #{id}
+    </select>
+
+    <delete id="deleteByTemplateId" parameterType="java.lang.Long">
+        delete from ls_shipping_method_area where template_id = #{id}
+    </delete>
+</mapper>

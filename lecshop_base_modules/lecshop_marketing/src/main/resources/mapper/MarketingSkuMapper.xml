@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.marketing.mapper.MarketingSkuMapper">
+
+    <resultMap id="marketingSku" type="com.lecshop.marketing.bean.MarketingSku">
+        <result column="id" property="id"/>
+        <result column="skuid" property="skuId"/>
+        <result column="marketing_id" property="marketingId"/>
+    </resultMap>
+
+
+    <insert id="addMarketingSkus" parameterType="com.lecshop.marketing.bean.MarketingSku">
+        insert into ls_sku_marketing
+        (skuid,marketing_id)
+        values
+        <foreach collection="list" item="marketingSku" index="index" separator=",">
+            (
+            #{marketingSku.skuId},
+            #{marketingSku.marketingId}
+            )
+        </foreach>
+    </insert>
+
+    <select id="queryMarketingSkusByMarketingId" parameterType="java.lang.Long" resultMap="marketingSku">
+        select * from ls_sku_marketing where marketing_id = #{marketingId}
+    </select>
+
+    <delete id="deleteByMarketingId" parameterType="java.lang.Long">
+        delete from  ls_sku_marketing where marketing_id = #{marketingId}
+    </delete>
+</mapper>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.order.mapper.OrderAttrMapper">
+
+    <resultMap id="orderAttr" type="com.lecshop.order.bean.OrderAttr">
+        <result column="id" property="id"/>
+        <result column="order_id" property="orderId"/>
+        <result column="receipt_name" property="receiptName"/>
+        <result column="receipt_address" property="receiptAddress"/>
+        <result column="receipt_detail_address" property="receiptDetailAddress"/>
+        <result column="receipt_mobile" property="receiptMobile"/>
+        <result column="receipt_phone" property="receiptPhone"/>
+        <result column="receipt_zip_code" property="receiptZipCode"/>
+        <result column="invoice_type" property="invoiceType"/>
+        <result column="invoice_title" property="invoiceTitle"/>
+        <result column="invoice_content" property="invoiceContent"/>
+        <result column="remark" property="remark"/>
+    </resultMap>
+
+
+    <select id="queryByOrderId" parameterType="java.lang.Long" resultMap="orderAttr">
+        select * from ls_order_attr where order_id=#{orderId}
+    </select>
+
+
+</mapper>

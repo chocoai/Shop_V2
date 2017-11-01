@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.attention.mapper.AttentionStoreMapper">
+    <resultMap id="attentionStore" type="com.lecshop.attention.bean.AttentionStore">
+        <result column="id" property="id"/>
+        <result column="customer_id" property="customerId"/>
+        <result column="store_id" property="storeId"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+    <select id="queryAttentionByCustomerId" parameterType="java.util.Map" resultMap="attentionStore">
+        SELECT * FROM ls_attention_store WHERE customer_id=#{customerId} AND del_flag='0'
+        limit #{startRowNum},#{pageSize}
+    </select>
+    <select id="queryAttentionByCustomerIdCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT count(1) FROM ls_attention_store WHERE customer_id=#{customerId} AND del_flag='0'
+    </select>
+    <select id="queryStoreAttentionCountByStoreId" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM ls_attention_store WHERE store_id=#{storeId} AND del_flag='0'
+    </select>
+    <update id="cancelStoreAttention" parameterType="java.util.Map">
+        UPDATE ls_attention_store SET del_flag='1' WHERE customer_id=#{customerId} AND store_id=#{storeId}
+    </update>
+</mapper>

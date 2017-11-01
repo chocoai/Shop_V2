@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.friendlink.mapper.FriendLinkMapper">
+
+    <resultMap id="FriendLinkResult" type="com.lecshop.friendlink.bean.FriendLink">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="url" property="url"/>
+        <result column="sort" property="sort"/>
+        <result column="image_url" property="imageUrl"/>
+        <result column="is_show" property="isShow"/>
+        <result column="del_flag" property="delFlag"/>
+    </resultMap>
+
+    <sql id="columnList">
+        id,name,url,sort,image_url,is_show,del_flag
+    </sql>
+
+    <select id="queryFriendLinks" parameterType="java.util.Map" resultMap="FriendLinkResult">
+        SELECT
+        <include refid="columnList"/>
+        FROM ls_friendship_link
+        WHERE del_flag = '0'
+        <if test="name != null and name != '' ">
+            AND name like CONCAT(CONCAT('%', #{name}),'%')
+        </if>
+        <if test="url != null and url != ''">
+            AND url like CONCAT(CONCAT('%', #{url}),'%')
+        </if>
+        ORDER BY sort
+        limit #{startRowNum},#{pageSize}
+    </select>
+
+    <select id="queryFriendLinksCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(1) from ls_friendship_link
+        where del_flag = '0'
+        <if test="name != null and name != '' ">
+            AND name like CONCAT(CONCAT('%', #{name}),'%')
+        </if>
+        <if test="url != null and url != ''">
+            AND url like CONCAT(CONCAT('%', #{url}),'%')
+        </if>
+    </select>
+
+    <select id="queryFriendLinkById" parameterType="java.lang.Long" resultMap="FriendLinkResult">
+        SELECT
+        <include refid="columnList"/>
+        FROM ls_friendship_link WHERE id = #{id} and del_flag = '0'
+    </select>
+
+    <update id="updateFriendLink" parameterType="com.lecshop.friendlink.bean.FriendLink">
+        UPDATE ls_friendship_link
+        <set>
+            <if test="name != null">
+                `name` = #{name},
+            </if>
+            <if test="url != null">
+                url = #{url},
+            </if>
+            <if test="sort != null">
+                sort = #{sort},
+            </if>
+            <if test="imageUrl != null">
+                image_url = #{imageUrl},
+            </if>
+            <if test="isShow != null">
+                is_show = #{isShow},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <insert id="addFriendLink" parameterType="com.lecshop.friendlink.bean.FriendLink">
+        INSERT INTO ls_friendship_link
+        <trim prefix="(" suffixOverrides="," suffix=")">
+            <if test="name != null">
+                name,
+            </if>
+            <if test="url != null">
+                url,
+            </if>
+            <if test="sort != null">
+                sort,
+            </if>
+            <if test="imageUrl != null">
+                image_url,
+            </if>
+            <if test="isShow != null">
+                is_show,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="url != null">
+                #{url},
+            </if>
+            <if test="sort != null">
+                #{sort},
+            </if>
+            <if test="imageUrl != null">
+                #{imageUrl},
+            </if>
+            <if test="isShow != null">
+                #{isShow},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag},
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="deleteFriendLink" parameterType="java.lang.Long">
+        update ls_friendship_link
+        set del_flag = '1'
+        where id = #{id}
+    </delete>
+
+    <delete id="batchDeleteFriendLinks" parameterType="int">
+        update ls_friendship_link
+        set del_flag = '1'
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

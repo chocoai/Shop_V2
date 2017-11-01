@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.marketingmanager.mapper.GoodsCombinationMapper">
+
+    <resultMap id="goodsCombinationResult" type="com.lecshop.marketingmanager.bean.GoodsCombination">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="store_id" property="storeId"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="del_time" property="delTime"/>
+    </resultMap>
+
+    <select id="queryGoodsCombination" parameterType="java.util.Map" resultMap="goodsCombinationResult">
+        SELECT id,`name`
+        FROM ls_combination WHERE del_flag = '0' AND store_id = #{storeId}
+        <if test='name != null and !"".equals(name)'>
+            AND `name` LIKE CONCAT(CONCAT("%", #{name}),"%")
+        </if>
+        ORDER BY create_time DESC
+        limit #{startRowNum},#{pageSize}
+    </select>
+
+    <select id="queryGoodsCombinationCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM ls_combination WHERE del_flag = '0' AND store_id = #{storeId}
+        <if test='name != null and !"".equals(name)'>
+            AND `name` LIKE CONCAT(CONCAT("%", #{name}),"%")
+        </if>
+    </select>
+
+    <insert id="addGoodsCombination" parameterType="com.lecshop.marketingmanager.bean.GoodsCombination">
+        INSERT INTO ls_combination (`name`,store_id,del_flag,create_time) VALUES (#{name},#{storeId},'0',NOW())
+    </insert>
+
+    <update id="deleteGoodsCombination" parameterType="java.util.Map">
+        UPDATE ls_combination SET del_flag = '1', del_time = NOW() WHERE id = #{id} AND store_id = #{storeId}
+    </update>
+
+    <update id="batchDeleteGoodsCombination" parameterType="java.util.Map">
+        update ls_combination SET del_flag = '1', del_time = NOW() WHERE store_id = #{storeId} AND id IN
+        <foreach collection="ids" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <select id="queryGoodsCombinationById" parameterType="java.util.Map" resultMap="goodsCombinationResult">
+        SELECT id,`name` FROM ls_combination WHERE id = #{id} AND store_id = #{storeId}
+    </select>
+
+    <update id="updateGoodsCombination" parameterType="com.lecshop.marketingmanager.bean.GoodsCombination">
+        UPDATE ls_combination SET `name` = #{name}, modify_time = NOW() WHERE id = #{id} AND store_id = #{storeId}
+    </update>
+
+</mapper>

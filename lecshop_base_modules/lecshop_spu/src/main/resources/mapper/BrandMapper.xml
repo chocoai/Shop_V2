@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.brand.mapper.BrandMapper">
+
+    <resultMap id="brand" type="com.lecshop.brand.bean.Brand">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="nick_name" property="nickName"/>
+        <result column="url" property="url"/>
+        <result column="certificat_url" property="certificatUrl"/>
+        <result column="store_id" property="storeId"/>
+        <result column="status" property="status"/>
+        <result column="reason" property="reason"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="create_name" property="createName"/>
+        <result column="modify_name" property="modifyName"/>
+        <result column="del_name" property="delName"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="del_time" property="delTime"/>
+        <result column="storeName" property="storeName"/>
+    </resultMap>
+
+    <insert id="addBrand" parameterType="com.lecshop.brand.bean.Brand">
+        insert into ls_brand
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                name,
+            </if>
+            <if test="nickName != null">
+                nick_name,
+            </if>
+            <if test="url != null">
+                url,
+            </if>
+            <if test="certificatUrl != null">
+                certificat_url,
+            </if>
+            <if test="storeId != null">
+                store_id,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="reason != null">
+                reason,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+            <if test="createName != null">
+                create_name,
+            </if>
+            <if test="modifyName != null">
+                modify_name,
+            </if>
+            <if test="delName != null">
+                del_name,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="modifyTime != null">
+                modify_time,
+            </if>
+            <if test="delTime != null">
+                del_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="nickName != null">
+                #{nickName},
+            </if>
+            <if test="url != null">
+                #{url},
+            </if>
+            <if test="certificatUrl != null">
+                #{certificatUrl},
+            </if>
+            <if test="storeId != null">
+                #{storeId},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="reason != null">
+                #{reason},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag},
+            </if>
+            <if test="createName != null">
+                #{createName},
+            </if>
+            <if test="modifyName != null">
+                #{modifyName},
+            </if>
+            <if test="delName != null">
+                #{delName},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="modifyTime != null">
+                #{modifyTime},
+            </if>
+            <if test="delTime != null">
+                #{delTime},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="queryBrandById" parameterType="java.util.Map" resultMap="brand">
+        select * from ls_brand where id = #{id} and del_flag = '0'
+        <if test="storeId != -1 ">
+            and store_id = #{storeId}
+        </if>
+    </select>
+
+    <update id="updateBrand" parameterType="com.lecshop.brand.bean.Brand">
+        update ls_brand
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="nickName != null">
+                nick_name = #{nickName},
+            </if>
+            <if test="url != null">
+                url = #{url},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag},
+            </if>
+            <if test="createName != null">
+                create_name = #{createName},
+            </if>
+            <if test="modifyName != null">
+                modify_name = #{modifyName},
+            </if>
+            <if test="delName != null">
+                del_name = #{delName},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="modifyTime != null">
+                modify_time = #{modifyTime},
+            </if>
+            <if test="delTime != null">
+                del_time = #{delTime}
+            </if>
+        </set>
+        where id = #{id} and store_id = #{storeId}
+    </update>
+
+
+    <update id="deleteBrand" parameterType="com.lecshop.brand.bean.Brand">
+        update ls_brand
+        <set>
+            <if test="delFlag != null">
+                del_flag = #{delFlag},
+            </if>
+            <if test="delName != null">
+                del_name = #{delName},
+            </if>
+            <if test="delTime != null">
+                del_time = #{delTime}
+            </if>
+        </set>
+        where id = #{id} and store_id = #{storeId}
+    </update>
+
+
+    <select id="queryBrands" parameterType="java.util.Map" resultMap="brand">
+        select * from ls_brand
+        where del_flag = '0' and store_id = #{storeId}
+        <if test="name != null and name != '' ">
+            AND name like CONCAT(CONCAT('%', #{name}),'%')
+        </if>
+
+        <if test="nickName != null and nickName != ''">
+            AND nick_name like CONCAT(CONCAT('%', #{nickName}),'%')
+        </if>
+
+        order by create_time desc
+        limit #{startRowNum},#{pageSize}
+    </select>
+
+    <select id="queryBrandsCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(1) from ls_brand
+        where del_flag = '0' and store_id = #{storeId}
+        <if test="name != null and name != '' ">
+            AND name like CONCAT(CONCAT('%', #{name}),'%')
+        </if>
+
+        <if test="nickName != null and nickName != ''">
+            AND nick_name like CONCAT(CONCAT('%', #{nickName}),'%')
+        </if>
+    </select>
+    <select id="queryAllBrands" resultMap="brand">
+        select * from ls_brand where  del_flag = '0' and store_id = #{storeId} and status = '1'
+    </select>
+    <insert id="batchAddCustomBrand" parameterType="java.util.List">
+        INSERT INTO ls_brand (`name`,url,certificat_url,store_id,status,del_flag,create_name,create_time) VALUES
+        <foreach collection="list" index="index" item="item" separator=",">
+            (
+            #{item.name},#{item.url},#{item.certificatUrl},#{item.storeId},#{item.status},#{item.delFlag},#{item.createName},#{item.createTime}
+            )
+        </foreach>
+    </insert>
+    <delete id="batchDeleteCustomBrand" parameterType="java.lang.Long">
+        DELETE FROM ls_brand WHERE store_id=#{storeId}
+    </delete>
+    <select id="queryStoreBrands" parameterType="com.lecshop.brand.bean.Brand" resultMap="brand">
+        SELECT ls_brand.* FROM ls_brand JOIN ls_brand_apply ON ls_brand.id=ls_brand_apply.brand_id
+        WHERE ls_brand_apply.store_id=#{storeId}
+        <if test='status =="0"'>
+            AND (ls_brand_apply.status=#{status} OR ls_brand_apply.status='1')
+        </if>
+        <if test='status !="0"'>
+            AND ls_brand_apply.status=#{status}
+        </if>
+    </select>
+    <select id="queryStoreBrandsForPageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM ls_brand JOIN ls_brand_apply ON ls_brand.id=ls_brand_apply.brand_id
+        WHERE ls_brand_apply.store_id=#{storeId}
+        <if test='name != null and name !=""'>
+            AND `name` LIKE CONCAT(CONCAT('%',#{name}),'%')
+        </if>
+    </select>
+    <select id="queryStoreBrandsForPage" parameterType="java.util.Map" resultMap="brand">
+        SELECT ls_brand.id,ls_brand.name,ls_brand.nick_name,ls_brand.url,ls_brand.certificat_url,ls_brand.create_name,
+        ls_brand.modify_name,ls_brand.del_name,ls_brand.create_time,ls_brand.modify_time,ls_brand.del_time,ls_brand_apply.`status`,
+        ls_brand_apply.reason FROM ls_brand JOIN ls_brand_apply ON ls_brand.id=ls_brand_apply.brand_id
+        WHERE ls_brand_apply.store_id=#{storeId}
+        <if test='name != null and name !=""'>
+            AND `name` LIKE CONCAT(CONCAT('%',#{name}),'%')
+        </if>
+        ORDER BY create_time DESC
+        limit #{startRowNum},#{pageSize}
+    </select>
+    <select id="queryCustomBrandByStoreIdAndStatus" parameterType="com.lecshop.brand.bean.Brand" resultMap="brand">
+        SELECT * FROM ls_brand WHERE store_id=#{storeId}
+        <if test='status =="0"'>
+            AND (status=#{status} OR status='1')
+        </if>
+        <if test='status !="0"'>
+            AND status=#{status}
+        </if>
+    </select>
+    <select id="queryCustomBrandByStatus" parameterType="java.util.Map" resultMap="brand">
+        SELECT lb.id,lb.name,lb.nick_name AS nick_name,lb.url,lb.certificat_url, lsi.store_name AS storeName FROM ls_brand AS lb  JOIN ls_store_info AS lsi ON lb.store_id=lsi.id
+        WHERE lb.`status` = '0' AND lsi.`status` = '2' AND lb.del_flag = '0' AND lsi.del_flag = '0'
+        <if test='brandName != null and !"".equals(brandName)'>
+            AND lb.`name` LIKE CONCAT(CONCAT('%',#{brandName}),'%')
+        </if>
+        <if test='storeName != null and !"".equals(storeName)'>
+            AND lsi.store_name LIKE CONCAT(CONCAT('%',#{storeName}),'%')
+        </if>
+        order by lb.create_time desc
+        limit #{startRowNum},#{pageSize}
+    </select>
+    <select id="queryCustomBrandCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM ls_brand AS lb  JOIN ls_store_info AS lsi ON lb.store_id=lsi.id
+        WHERE lb.`status` = '0' AND lsi.`status` = '2' AND lb.del_flag = '0' AND lsi.del_flag = '0'
+        <if test='brandName != null and !"".equals(brandName)'>
+            AND lb.`name` LIKE CONCAT(CONCAT('%',#{brandName}),'%')
+        </if>
+        <if test='storeName != null and !"".equals(storeName)'>
+            AND lsi.store_name LIKE CONCAT(CONCAT('%',#{storeName}),'%')
+        </if>
+    </select>
+    <update id="passCustomBrandAudit" parameterType="java.lang.Long">
+        UPDATE ls_brand SET status = '1' WHERE id = #{id}
+    </update>
+    <update id="batchPassCustomBrandAudit" parameterType="java.lang.Long">
+        UPDATE ls_brand SET status = '1' WHERE id IN
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    <update id="refuseCustomBrandAudit" parameterType="com.lecshop.brand.bean.Brand">
+        UPDATE ls_brand SET status = '2',reason = #{reason} WHERE id = #{id}
+    </update>
+    <update id="batchRefuseCustomBrandAudit" parameterType="java.util.Map">
+        UPDATE ls_brand SET status = '2',reason = #{reason} WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    <update id="passCustomBrandByStoreId" parameterType="java.lang.Long">
+        UPDATE ls_brand SET `status` = '1' WHERE id IN (
+        SELECT a.id FROM
+        (SELECT id FROM ls_brand WHERE status = '0' AND store_id = #{storeId}) a
+        )
+    </update>
+</mapper>

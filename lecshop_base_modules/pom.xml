@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>lecshop</artifactId>
+        <groupId>com.lecshop</groupId>
+        <version>2.0.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>lecshop_base_modules</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>lecshop_common</module>
+        <module>lecshop_system</module>
+        <module>lecshop_spu</module>
+        <module>lecshop_customer</module>
+        <module>lecshop_order</module>
+        <module>lecshop_marketing</module>
+        <module>lecshop_search</module>
+        <module>lecshop_site</module>
+        <module>lecshop_distribution</module>
+        <module>lecshop_shopping_cart</module>
+    </modules>
+
+
+</project>

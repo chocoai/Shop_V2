@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.loginset.mapper.LoginSetMapper">
+    <resultMap id="BaseResult" type="com.lecshop.loginset.bean.LoginSet">
+        <result column="id" property="id"/>
+        <result column="codeType" property="codeType"/>
+        <result column="column_name" property="columnName"/>
+        <result column="column_value" property="columnValue"/>
+    </resultMap>
+    <select id="queryLoginSet" resultMap="BaseResult">
+        SELECT id,codeType,`column_name`,column_value FROM ls_login_setting
+    </select>
+    <update id="editEmailSet" parameterType="com.lecshop.emailset.bean.EmailSet">
+        UPDATE ls_email_setting SET sender_mail=#{senderEmail},sender_name=#{senderName},smtp_server=#{smtpServer},
+        smtp_port=#{smtpPort},username=#{username},password=#{password} WHERE id=#{id}
+    </update>
+    <delete id="deleteLoginSet" parameterType="int">
+        DELETE FROM ls_login_setting WHERE codeType=#{codeType}
+    </delete>
+    <insert id="addLoginSet" parameterType="java.util.List">
+        INSERT INTO ls_login_setting (codeType,`column_name`,column_value) VALUES
+        <foreach collection="list" index="index" item="loginSet" separator=",">
+            (
+            #{loginSet.codeType},#{loginSet.columnName},#{loginSet.columnValue}
+            )
+        </foreach>
+    </insert>
+</mapper>

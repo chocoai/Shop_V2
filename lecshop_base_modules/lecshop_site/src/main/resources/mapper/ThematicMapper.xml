@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.thematicsetting.mapper.ThematicMapper">
+
+    <resultMap id="thematicSettingResult" type="com.lecshop.thematicsetting.bean.Thematic">
+        <result column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="seo_keywords" property="seoKeywords"/>
+        <result column="seo_desc" property="seoDesc"/>
+        <result column="hide_head_tail" property="hideHeadTail"/>
+        <result column="is_use" property="isUse"/>
+        <result column="store_id" property="storeId"/>
+        <result column="desc" property="desc"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="del_time" property="delTime"/>
+    </resultMap>
+
+    <select id="queryThematic" parameterType="java.util.Map" resultMap="thematicSettingResult">
+        SELECT id,title,seo_keywords,seo_desc,hide_head_tail,is_use,store_id,`desc`,del_flag,create_time,modify_time,del_time
+        FROM ls_thematic_setting
+        WHERE del_flag = '0' AND store_id = #{storeId}
+        <if test="name != null and !''.equals(name)">
+            AND title LIKE CONCAT(CONCAT("%",#{name}),"%")
+        </if>
+        ORDER BY create_time DESC
+        limit #{startRowNum},#{pageSize}
+    </select>
+
+    <select id="queryThematicCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM ls_thematic_setting
+        where del_flag = '0' AND store_id = #{storeId}
+        <if test="name != null and !''.equals(name)">
+            AND title like CONCAT(CONCAT('%', #{name}),'%')
+        </if>
+    </select>
+
+    <insert id="addThematic" parameterType="com.lecshop.thematicsetting.bean.Thematic">
+        INSERT INTO ls_thematic_setting
+        (title,seo_keywords,seo_desc,hide_head_tail,is_use,store_id,`desc`,create_time) VALUES
+        (#{title},#{seoKeywords},#{seoDesc},#{hideHeadTail},#{isUse},#{storeId},#{desc},NOW())
+    </insert>
+
+    <update id="deleteThematic" parameterType="java.util.Map">
+        UPDATE ls_thematic_setting SET del_flag = '1',del_time = NOW() WHERE store_id = #{storeId} AND id = #{id}
+    </update>
+
+    <update id="batchDeleteThematic" parameterType="java.util.Map">
+        UPDATE ls_thematic_setting SET del_flag = '1',del_time = NOW() WHERE store_id = #{storeId} AND id IN
+        <foreach collection="ids" index="index" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <select id="queryThematicById" parameterType="java.util.Map" resultMap="thematicSettingResult">
+        SELECT title,seo_keywords,seo_desc,hide_head_tail,is_use,`desc`
+        FROM ls_thematic_setting
+        WHERE id = #{id} AND store_id = #{storeId}
+    </select>
+
+    <update id="updateThematic" parameterType="com.lecshop.thematicsetting.bean.Thematic">
+        UPDATE ls_thematic_setting
+        SET title = #{title},seo_keywords = #{seoKeywords},seo_desc = #{seoDesc},hide_head_tail = #{hideHeadTail},is_use = #{isUse},`desc` = #{desc},modify_time = NOW()
+        WHERE id = #{id} AND store_id = #{storeId}
+    </update>
+
+</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.distributorlist.mapper.DistributorMapper">
+    <resultMap id="BaseResult" type="com.lecshop.distributorlist.bean.Distributor">
+        <result column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="mobile" property="mobile"/>
+        <result column="email" property="email"/>
+        <result column="belong_store_id" property="belongStoreId"/>
+        <result column="superior_id" property="superiorId"/>
+    </resultMap>
+    <select id="queryDistributorCount" parameterType="java.util.Map" resultType="int">
+        SELECT COUNT(1) FROM ls_customer WHERE del_flag='0' AND belong_store_id=#{belongStoreId}
+        <if test="username != null">
+            AND username LIKE CONCAT(CONCAT('%', #{username}),'%')
+        </if>
+    </select>
+    <select id="queryDistributor" parameterType="java.util.Map" resultMap="BaseResult">
+        SELECT id,username,mobile,email,belong_store_id,superior_id FROM ls_customer
+        WHERE del_flag='0' AND belong_store_id=#{belongStoreId}
+        <if test="username != null">
+            AND username LIKE CONCAT(CONCAT('%', #{username}),'%')
+        </if>
+        limit #{startRowNum},#{pageSize}
+    </select>
+    <select id="queryDistributorBySuperiorId" resultMap="BaseResult" parameterType="java.lang.Long">
+        SELECT id,username,mobile,email,belong_store_id,superior_id FROM ls_customer WHERE superior_id=#{id}
+    </select>
+    <update id="deleteDistributor" parameterType="java.lang.Long">
+        UPDATE ls_customer SET belong_store_id=NULL,superior_id=NULL WHERE id=#{customerId}
+    </update>
+    <update id="updateDistributor" parameterType="com.lecshop.distributorlist.bean.Distributor">
+        UPDATE ls_customer SET superior_id=#{superiorId} WHERE superior_id=#{id}
+    </update>
+</mapper>

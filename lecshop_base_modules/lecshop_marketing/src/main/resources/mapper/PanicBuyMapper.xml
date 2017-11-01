@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.marketing.mapper.PanicBuyMapper">
+
+    <resultMap id="panicBuy" type="com.lecshop.marketing.bean.PanicBuy">
+        <result column="id" property="id"/>
+        <result column="marketing_id" property="marketingId"/>
+        <result column="discount" property="discount"/>
+        <result column="limit_num" property="limitNum"/>
+        <result column="pc_url" property="pcUrl"/>
+        <result column="mobile_url" property="mobileUrl"/>
+    </resultMap>
+
+    <update id="updatePanicBuy" parameterType="com.lecshop.marketing.bean.PanicBuy">
+        update ls_marketing_panicbuy set discount = #{discount},limit_num=#{limitNum},pc_url=#{pcUrl},mobile_url=#{mobileUrl} where marketing_id=#{marketingId}
+    </update>
+
+    <select id="queryByMarketingId" parameterType="java.lang.Long" resultMap="panicBuy">
+        select * from ls_marketing_panicbuy where marketing_id = #{marketingId}
+    </select>
+
+
+    <insert id="addPanicBuy" parameterType="com.lecshop.marketing.bean.PanicBuy">
+        insert into ls_marketing_panicbuy
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="marketingId != null">
+                marketing_id,
+            </if>
+            <if test="discount != null">
+                discount,
+            </if>
+            <if test="limitNum != null">
+                limit_num,
+            </if>
+            <if test="pcUrl != null">
+                pc_url,
+            </if>
+            <if test="mobileUrl != null">
+                mobile_url
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="marketingId != null">
+                #{marketingId},
+            </if>
+            <if test="discount != null">
+                #{discount},
+            </if>
+            <if test="limitNum != null">
+                #{limitNum},
+            </if>
+            <if test="pcUrl != null">
+                #{pcUrl},
+            </if>
+            <if test="mobileUrl != null">
+                #{mobileUrl}
+            </if>
+        </trim>
+    </insert>
+</mapper>

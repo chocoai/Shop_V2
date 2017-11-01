@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.comment.mapper.CommentMapper">
+
+    <resultMap id="comment" type="com.lecshop.comment.bean.Comment">
+        <result column="id" property="id"/>
+        <result column="customer_id" property="customerId"/>
+        <result column="username" property="customerName"/>
+        <result column="sku_id" property="skuId"/>
+        <result column="skuname" property="sku.name"/>
+        <result column="skuurl" property="sku.url"/>
+        <result column="is_anonymous" property="isAnonymous"/>
+        <result column="comment" property="comment"/>
+        <result column="desc_score" property="descScore"/>
+        <result column="seller_score" property="sellerScore"/>
+        <result column="logistics_score" property="logisticsScore"/>
+        <result column="has_pic" property="hasPic"/>
+        <result column="create_time" property="createTime"/>
+        <result column="del_flag" property="delFlag"/>
+    </resultMap>
+
+    <resultMap id="commentPic" type="com.lecshop.comment.bean.CommentPic">
+        <result column="id" property="id"/>
+        <result column="comment_id" property="commentId"/>
+        <result column="url" property="url"/>
+    </resultMap>
+
+    <select id="queryCommentById" parameterType="java.lang.Long" resultMap="comment">
+         select ls_comment.*,ls_customer.username ,ls_sku.name as skuname,ls_sku.url as skuurl from ls_comment join ls_customer on ls_comment.customer_id =
+        ls_customer.id join ls_sku on ls_sku.id = ls_comment.sku_id  where ls_comment.id = #{id} and ls_comment.del_flag = '0' and ls_sku.del_flag = '0'
+    </select>
+
+    <select id="queryCommentPicsByCommentId" parameterType="java.lang.Long" resultMap="commentPic">
+        select * from ls_comment_picture where comment_id = #{commentId}
+    </select>
+
+    <select id="queryComments" resultMap="comment" parameterType="java.util.Map">
+        select ls_comment.*,ls_customer.username ,ls_sku.name as skuname ,ls_sku.url as skuurl from ls_comment join ls_customer on ls_comment.customer_id =
+        ls_customer.id join ls_sku on ls_sku.id = ls_comment.sku_id where ls_comment.del_flag = '0' and ls_customer.del_flag = '0' and ls_sku.del_flag = '0'
+        <if test="customerName!=null and customerName!=''">
+            AND ls_customer.username LIKE CONCAT(CONCAT('%', #{customerName},'%'))
+        </if>
+        <if test="skuName!=''and skuName!=null">
+            AND ls_sku.name LIKE CONCAT(CONCAT('%', #{skuName},'%'))
+        </if>
+        order by ls_comment.create_time desc limit #{startRowNum},#{pageSize}
+    </select>
+
+
+    <select id="queryCommentCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(1) from ls_comment join ls_customer on ls_comment.customer_id = ls_customer.id join ls_sku on ls_sku.id = ls_comment.sku_id where
+        ls_comment.del_flag = '0' and ls_customer.del_flag = '0' and ls_sku.del_flag = '0'
+        <if test="customerName!=null and customerName!=''">
+            AND ls_customer.username LIKE CONCAT(CONCAT('%', #{customerName},'%'))
+        </if>
+        <if test="skuName!=''and skuName!=null">
+            AND ls_sku.name LIKE CONCAT(CONCAT('%', #{skuName},'%'))
+        </if>
+    </select>
+
+    <update id="deleteComments" parameterType="java.util.List">
+        update ls_comment set del_flag = '1'
+        where id in
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    <select id="queryCommentCountBySkuId" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM ls_comment WHERE sku_id=#{skuId} AND del_flag='0'
+    </select>
+</mapper>

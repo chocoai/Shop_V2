@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.sku.mapper.SkuMapper">
+
+    <resultMap id="sku" type="com.lecshop.sku.bean.Sku">
+        <result column="id" property="id"/>
+        <result column="spu_id" property="spuId"/>
+        <result column="sku_no" property="skuNo"/>
+        <result column="name" property="name"/>
+        <result column="subtitle" property="subTitle"/>
+        <result column="stock" property="stock"/>
+        <result column="warning_stock" property="warningStock"/>
+        <result column="price" property="price"/>
+        <result column="weight" property="weight"/>
+        <result column="store_id" property="storeId"/>
+        <result column="shelves_status" property="shelvesStatus"/>
+        <result column="url" property="url"/>
+        <result column="status" property="status"/>
+        <result column="reason" property="reason"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="create_name" property="createName"/>
+        <result column="modify_name" property="modifyName"/>
+        <result column="del_name" property="delName"/>
+        <result column="create_time " property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="del_time" property="delTime"/>
+        <result column="up_time" property="upTime"/>
+    </resultMap>
+
+    <select id="queryById" parameterType="java.util.Map" resultMap="sku">
+        select * from ls_sku where del_flag = '0' and id = #{id}
+        <if test="storeId != -1 ">
+            and store_id = #{storeId}
+        </if>
+    </select>
+
+    <select id="querySkus" parameterType="java.util.Map" resultMap="sku">
+        select * from ls_sku
+        where del_flag = '0' and store_id = #{storeId}
+        <if test="name != null and name != '' ">
+            AND name like CONCAT(CONCAT('%', #{name}),'%')
+        </if>
+        <if test="skuNo != null and skuNo != ''">
+            AND sku_no = #{skuNo}
+        </if>
+        order by create_time desc
+        limit #{startRowNum},#{pageSize}
+    </select>
+
+    <select id="querySkuCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(1) from ls_sku
+        where del_flag = '0' and store_id = #{storeId}
+        <if test="name != null and name != '' ">
+            AND name like CONCAT(CONCAT('%', #{name}),'%')
+        </if>
+        <if test="skuNo != null and skuNo != ''">
+            AND sku_no = #{skuNo}
+        </if>
+
+    </select>
+
+    <insert id="addSku" parameterType="com.lecshop.sku.bean.Sku">
+        insert into ls_sku
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="spuId != null">
+                spu_id,
+            </if>
+            <if test="skuNo != null">
+                sku_no,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="subTitle != null">
+                subtitle,
+            </if>
+            <if test="stock != null">
+                stock,
+            </if>
+            <if test="warningStock != null">
+                warning_stock,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="weight != null">
+                weight,
+            </if>
+            <if test="storeId != null">
+                store_id,
+            </if>
+            <if test="shelvesStatus != null">
+                shelves_status,
+            </if>
+            <if test="url != null">
+                url,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+            <if test="createName != null">
+                create_name,
+            </if>
+            <if test="modifyName != null">
+                modify_name,
+            </if>
+            <if test="delName != null">
+                del_name,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="modifyTime != null">
+                modify_time,
+            </if>
+            <if test="delTime != null">
+                del_time,
+            </if>
+            <if test='shelvesStatus=="1"'>
+                up_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="spuId != null">
+                #{spuId},
+            </if>
+            <if test="skuNo != null">
+                #{skuNo},
+            </if>
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="subTitle != null">
+                #{subTitle},
+            </if>
+            <if test="stock != null">
+                #{stock},
+            </if>
+            <if test="warningStock != null">
+                #{warningStock},
+            </if>
+            <if test="price != null">
+                #{price},
+            </if>
+            <if test="weight != null">
+                #{weight},
+            </if>
+            <if test="storeId != null">
+                #{storeId},
+            </if>
+            <if test="shelvesStatus != null">
+                #{shelvesStatus},
+            </if>
+            <if test="url != null">
+                #{url},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag},
+            </if>
+            <if test="createName != null">
+                #{createName},
+            </if>
+            <if test="modifyName != null">
+                #{modifyName},
+            </if>
+            <if test="delName != null">
+                #{delName},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="modifyTime != null">
+                #{modifyTime},
+            </if>
+            <if test="delTime != null">
+                #{delTime},
+            </if>
+            <if test='shelvesStatus=="1"'>
+                now(),
+            </if>
+        </trim>
+    </insert>
+
+
+    <select id="querySkuBySpuId" parameterType="java.util.Map" resultMap="sku">
+        select * from ls_sku where spu_id = #{spuId} and del_flag = '0'
+        <if test="storeId != null and storeId != -1 ">
+            and store_id = #{storeId}
+        </if>
+    </select>
+
+    <update id="deleteBySpuId" parameterType="java.util.Map">
+        update ls_sku set del_flag = '1' where spu_id = #{spuId} and store_id = #{storeId}
+    </update>
+
+
+    <update id="updateShelvesStatus" parameterType="java.util.Map">
+        update ls_sku
+        <set>
+            <if test='status=="1"'>
+                up_time = #{upTime},
+            </if>
+            shelves_status = #{status}
+        </set>
+        where store_id = #{storeId} and spu_id in
+        <foreach collection="spuIds" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="updateSkuAuditStatus" parameterType="java.util.Map">
+        update ls_sku set status = #{status} where store_id = #{storeId} and spu_id in
+        <foreach collection="spuIds" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+
+    <delete id="deleteBySpuIdPhysical" parameterType="java.util.Map">
+            delete from ls_sku where spu_id = #{spuId} and store_id = #{storeId}
+    </delete>
+
+    <update id="auditPass" parameterType="java.lang.String">
+        update ls_sku set status = '0' where id = #{skuId} and status = '2'
+    </update>
+
+    <update id="auditRefuse" parameterType="java.util.Map">
+        update ls_sku set status = '1', reason = #{reason} where id = #{skuId} and status = '2'
+    </update>
+    <select id="queryFiveDataForAttentionStore" parameterType="java.lang.Long" resultMap="sku">
+        SELECT * FROM ls_sku WHERE del_flag = '0' AND store_id = #{storeId} AND shelves_status='1' AND status='0' ORDER BY up_time DESC limit 5
+    </select>
+</mapper>

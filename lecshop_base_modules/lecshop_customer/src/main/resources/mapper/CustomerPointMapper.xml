@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.point.mapper.CustomerPointMapper">
+
+    <resultMap id="customerPoint" type="com.lecshop.point.bean.CustomerPoint">
+        <result column="id" property="id"/>
+        <result column="customer_id" property="customerId"/>
+        <result column="detail" property="detail"/>
+        <result column="type" property="type"/>
+        <result column="point" property="point"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+
+    <select id="queryCustomerPoints" resultMap="customerPoint" parameterType="java.util.Map">
+        select * from ls_customer_point where 1=1
+        <if test="customerId != 0 ">
+            AND customer_id = #{customerId}
+        </if>
+        order by create_time desc limit #{startRowNum},#{pageSize}
+    </select>
+
+
+    <select id="queryCustomerPointCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(1) from ls_customer_point where 1=1
+        <if test="customerId != 0 ">
+            AND customer_id = #{customerId}
+        </if>
+    </select>
+
+    <select id="queryCustomerPointAllCount" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        select sum(point) from ls_customer_point where customer_id = #{customerId}
+    </select>
+
+    <insert id="addCustomerPoint" parameterType="com.lecshop.point.bean.CustomerPoint">
+        insert into ls_customer_point
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="customerId != null">
+                customer_id,
+            </if>
+            <if test="detail != null">
+                detail,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="point != null">
+                point,
+            </if>
+            create_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="customerId != null">
+                #{customerId},
+            </if>
+            <if test="detail != null">
+                #{detail},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="point != null">
+                #{point},
+            </if>
+            now()
+        </trim>
+    </insert>
+</mapper>

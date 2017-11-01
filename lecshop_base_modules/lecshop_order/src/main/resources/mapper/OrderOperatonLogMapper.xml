@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.order.mapper.OrderOperatonLogMapper">
+
+    <resultMap id="orderOperatonLog" type="com.lecshop.order.bean.OrderOperatonLog">
+        <result column="id" property="id"/>
+        <result column="order_id" property="orderId"/>
+        <result column="type" property="type"/>
+        <result column="remark" property="remark"/>
+        <result column="operation_name" property="operationName"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <insert id="addOrderOperatonLog" parameterType="com.lecshop.order.bean.OrderOperatonLog">
+        insert into ls_order_operation_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">
+                order_id,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="operationName != null">
+                operation_name,
+            </if>
+            <if test="createTime != null">
+                create_time
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">
+                #{orderId},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="remark != null">
+                #{remark},
+            </if>
+            <if test="operationName != null">
+                #{operationName},
+            </if>
+            <if test="createTime != null">
+                #{createTime}
+            </if>
+
+        </trim>
+    </insert>
+
+    <select id="queryOrderOperatonLogByOrderId" parameterType="java.lang.Long" resultMap="orderOperatonLog">
+        select * from ls_order_operation_log where order_id=#{orderId} order by create_time desc
+    </select>
+
+
+</mapper>

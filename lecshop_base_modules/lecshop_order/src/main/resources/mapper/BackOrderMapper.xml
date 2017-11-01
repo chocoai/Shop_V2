@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.backorder.mapper.BackOrderMapper">
+
+    <resultMap id="backOrder" type="com.lecshop.backorder.bean.BackOrder">
+        <result column="id" property="id"/>
+        <result column="back_code" property="backCode"/>
+        <result column="order_id" property="orderId"/>
+        <result column="order_code" property="orderCode"/>
+        <result column="store_id" property="storeId"/>
+        <result column="customer_id" property="customerId"/>
+        <result column="skuIds" property="skuIds"/>
+        <result column="type" property="type"/>
+        <result column="reason" property="reason"/>
+        <result column="desc" property="desc"/>
+        <result column="credential " property="credential"/>
+        <result column="back_type" property="backType"/>
+        <result column="back_price" property="backPrice"/>
+        <result column="real_back_price" property="realBackPrice"/>
+        <result column="pics" property="pics"/>
+        <result column="predeposit_pay" property="predepositPay"/>
+        <result column="status" property="status"/>
+        <result column="logis_company_name" property="logisCompanyName"/>
+        <result column="waybill_code" property="waybillCode"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+
+    <select id="queryBackOrders" parameterType="java.util.Map" resultMap="backOrder">
+        select * from ls_back_order where store_id = #{storeId}
+
+        <if test="backCode != null and backCode != '' ">
+            AND back_code = #{backCode}
+        </if>
+
+        <if test="orderCode != null and orderCode != '' ">
+            AND order_code = #{orderCode}
+        </if>
+
+        <if test='status != null and status != ""'>
+            AND status = #{status}
+        </if>
+
+        order by create_time desc
+        limit #{startRowNum},#{pageSize}
+    </select>
+
+    <select id="queryBackOrderCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(1) from ls_back_order where store_id = #{storeId}
+
+        <if test="backCode != null and backCode != '' ">
+            AND back_code = #{backCode}
+        </if>
+
+        <if test="orderCode != null and orderCode != '' ">
+            AND order_code = #{orderCode}
+        </if>
+
+        <if test='status != null and status != ""'>
+            AND status = #{status}
+        </if>
+    </select>
+
+    <select id="queryBackOrderById" parameterType="java.util.Map" resultMap="backOrder">
+        select * from ls_back_order where id =#{id}
+        <if test='storeId != null and storeId != -1'>
+            and store_id = #{storeId}
+        </if>
+    </select>
+
+    <update id="agreeToRefund" parameterType="java.util.Map">
+        update ls_back_order set status = '2'  where  id =#{id} and store_id = #{storeId} and status = '1'
+    </update>
+
+    <update id="refuseRefund" parameterType="java.util.Map">
+        update ls_back_order set status = '3' where  id =#{id} and store_id = #{storeId} and status = '1'
+    </update>
+
+    <update id="agreeToReturn" parameterType="java.util.Map">
+        update ls_back_order set status = '6' where  id =#{id} and store_id = #{storeId} and status = '4'
+    </update>
+
+    <update id="refuseRrturn" parameterType="java.util.Map">
+        update ls_back_order set status = '5' where  id =#{id} and store_id = #{storeId} and status = '4'
+    </update>
+
+    <update id="confirmReturn" parameterType="java.util.Map">
+        update ls_back_order set status = '8', real_back_price = #{money} where  id =#{id} and store_id = #{storeId} and status = '7'
+    </update>
+
+    <update id="refuseToReceive" parameterType="java.util.Map">
+        update ls_back_order set status = '9' where  id =#{id} and store_id = #{storeId} and status = '7'
+    </update>
+
+
+
+
+
+    <select id="queryStoreBackOrders" parameterType="java.util.Map" resultMap="backOrder">
+        select ls_back_order.*,ls_store_info.store_name from ls_back_order join ls_store_info on ls_back_order.store_id = ls_store_info.id where ls_store_info.del_flag = '0'
+
+        <if test="backCode != null and backCode != '' ">
+            AND ls_back_order.back_code = #{backCode}
+        </if>
+
+        <if test="storeName != null and storeName != '' ">
+            AND ls_store_info.store_name = #{storeName}
+        </if>
+
+        <if test="orderCode != null and orderCode != '' ">
+            AND ls_back_order.order_code = #{orderCode}
+        </if>
+
+        <if test='status != null and status != ""'>
+            AND ls_back_order.status = #{status}
+        </if>
+
+        order by ls_back_order.create_time desc
+        limit #{startRowNum},#{pageSize}
+    </select>
+
+    <select id="queryStoreBackOrdersCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(1) from ls_back_order  join ls_store_info on ls_back_order.store_id = ls_store_info.id where ls_store_info.del_flag = '0'
+
+        <if test="backCode != null and backCode != '' ">
+            AND ls_back_order.back_code = #{backCode}
+        </if>
+
+        <if test="storeName != null and storeName != '' ">
+            AND ls_store_info.store_name = #{storeName}
+        </if>
+
+        <if test="orderCode != null and orderCode != '' ">
+            AND ls_back_order.order_code = #{orderCode}
+        </if>
+
+        <if test='status != null and status != ""'>
+            AND ls_back_order.status = #{status}
+        </if>
+    </select>
+</mapper>

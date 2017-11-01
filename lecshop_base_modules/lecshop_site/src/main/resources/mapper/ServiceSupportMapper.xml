@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.helpcenter.mapper.ServiceSupportMapper">
+
+    <resultMap id="serviceSupportResult" type="com.lecshop.helpcenter.bean.ServiceSupport">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="url" property="url"/>
+        <result column="help_id" property="helpId"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="create_name" property="createName"/>
+        <result column="modify_name" property="modifyName"/>
+        <result column="del_name" property="delName"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="del_time" property="delTime"/>
+        <result column="helpName" property="helpName"/>
+    </resultMap>
+
+    <select id="queryServiceSupport" parameterType="java.util.Map" resultMap="serviceSupportResult">
+        SELECT
+        s.id,s.name,s.url,s.help_id,s.del_flag,s.create_name,s.modify_name,s.del_name,s.create_time,s.modify_time,s.del_time,h.`name`
+        AS helpName
+        FROM ls_help h JOIN ls_service_support s
+        ON h.id = s.help_id
+        WHERE s.del_flag = '0'
+        <if test="name != null and name!=''">
+            AND s.`name` LIKE CONCAT(CONCAT('%',#{name}),'%')
+        </if>
+        ORDER BY s.create_time
+        limit #{startRowNum},#{pageSize}
+    </select>
+
+    <select id="queryServiceSupportCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM
+        (SELECT s.name,s.del_flag FROM ls_help h JOIN ls_service_support s ON h.id = s.help_id) a
+        WHERE a.del_flag = '0'
+        <if test="name != null and name!=''">
+            AND a.`name` LIKE CONCAT(CONCAT('%',#{name}),'%')
+        </if>
+    </select>
+
+    <insert id="addServiceSupport" parameterType="com.lecshop.helpcenter.bean.ServiceSupport">
+        INSERT INTO ls_service_support (`name`,help_id,create_time) VALUES (#{name},#{helpId},NOW())
+    </insert>
+
+    <update id="deleteServiceSupport" parameterType="java.lang.Long">
+        UPDATE ls_service_support SET del_flag = '1',del_time = NOW() WHERE id = #{id}
+    </update>
+
+    <update id="batchDeleteServiceSupport" parameterType="java.lang.Long">
+        UPDATE ls_service_support SET del_flag = '1',del_time = NOW() WHERE id IN
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <select id="queryServiceSupportById" parameterType="java.lang.Long" resultMap="serviceSupportResult">
+        SELECT id,`name`,url,help_id FROM ls_service_support WHERE id = #{id}
+    </select>
+
+    <update id="updateServiceSupport" parameterType="com.lecshop.helpcenter.bean.ServiceSupport">
+        UPDATE ls_service_support SET `name` = #{name}, help_id = #{helpId} WHERE id = #{id}
+    </update>
+
+    <select id="queryAllServiceSupport" resultMap="serviceSupportResult">
+        select * from ls_service_support where  del_flag = '0'
+    </select>
+</mapper>

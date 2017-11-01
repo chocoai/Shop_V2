@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.coupon.mapper.CouponCodeMapper">
+    <resultMap id="BaseResult" type="com.lecshop.coupon.bean.CouponCode">
+        <result column="id" property="id"/>
+        <result column="coupon_id" property="couponId"/>
+        <result column="code" property="code"/>
+        <result column="customer_id" property="customerId"/>
+        <result column="status" property="status"/>
+        <result column="receive_time" property="receiveTime"/>
+        <result column="username" property="username"/>
+    </resultMap>
+    <insert id="addCouponCode" parameterType="java.util.List">
+        INSERT INTO ls_coupon_code(coupon_id,code,status) VALUES
+        <foreach collection="list" index="index" item="couponCode" separator=",">
+            (#{couponCode.couponId},#{couponCode.code},'0')
+        </foreach>
+    </insert>
+    <update id="deleteCouponCode" parameterType="java.util.Arrays">
+        UPDATE ls_coupon_code SET status='3' WHERE coupon_id IN
+        <foreach collection="array" index="index" item="couponId" open="(" separator="," close=")">
+            #{couponId}
+        </foreach>
+    </update>
+    <select id="queryCouponCodeByCouponId" parameterType="java.lang.Long" resultMap="BaseResult">
+        SELECT lcc.id,lcc.coupon_id,lcc.code,lcc.customer_id,lcc.status,lcc.receive_time,lc.username FROM ls_coupon_code  AS lcc
+        LEFT JOIN ls_customer AS lc ON lcc.customer_id=lc.id
+        WHERE coupon_id=#{couponId}
+    </select>
+
+    <resultMap id="couponInfo" type="com.lecshop.coupon.bean.CouponInfo">
+        <result column="id" property="id"/>
+        <result column="coupon_id" property="couponId"/>
+        <result column="code" property="code"/>
+        <result column="customer_id" property="customerId"/>
+        <result column="status" property="status"/>
+        <result column="receive_time" property="receiveTime"/>
+        <result column="type" property="type"/>
+        <result column="store_id" property="storeId"/>
+        <result column="name" property="name"/>
+        <result column="desc" property="desc"/>
+        <result column="starttime" property="startTime"/>
+        <result column="endtime" property="endTime"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="store_name" property="storeName"/>
+        <result column="store_status" property="storeStatus"/>
+        <result column="store_delflag" property="storeDelFlag"/>
+        <result column="fall_price" property="fallPrice"/>
+        <result column="full_price" property="fullPrice"/>
+        <result column="price" property="price"/>
+    </resultMap>
+    <select id="queryCouponInfoByCustomerId" parameterType="java.util.Map" resultMap="couponInfo">
+      SELECT * FROM(SELECT coupon_store_fall.*,ls_coupon_full.full_price AS full_price,ls_coupon_full.price AS price FROM
+      (SELECT coupon_store.*,ls_coupon_fall.price AS fall_price FROM(SELECT lcc_lc.*,lsi.store_name,lsi.`status` AS store_status,lsi.del_flag AS store_delflag FROM
+      (SELECT lcc.*,lc.type,lc.store_id,lc.`name`,lc.`desc`,lc.starttime,lc.endtime,lc.del_flag
+      FROM ls_coupon_code AS lcc JOIN ls_coupon AS lc ON lc.id=lcc.coupon_id WHERE lcc.customer_id=#{customerId} AND lcc.status=#{status} AND lc.del_flag='0') AS lcc_lc
+      LEFT JOIN ls_store_info lsi ON lcc_lc.store_id=lsi.id) AS coupon_store LEFT JOIN ls_coupon_fall ON coupon_store.coupon_id=ls_coupon_fall.coupon_id) AS coupon_store_fall
+      LEFT JOIN ls_coupon_full ON coupon_store_fall.coupon_id=ls_coupon_full.coupon_id) AS ls_code_info WHERE
+      (store_status='2' OR store_status IS NULL) AND (store_delflag='0' OR store_delflag IS NULL)
+      limit #{startRowNum},#{pageSize}
+    </select>
+    <select id="queryCouponInfoCountByCustomerId" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM(SELECT coupon_store_fall.*,ls_coupon_full.full_price AS full_price,ls_coupon_full.price AS price FROM
+        (SELECT coupon_store.*,ls_coupon_fall.price AS fall_price FROM
+        (SELECT lcc_lc.*,lsi.store_name,lsi.`status` AS store_status,lsi.del_flag AS store_delflag FROM (SELECT lcc.*,lc.type,lc.store_id,lc.`name`,lc.`desc`,lc.starttime,lc.endtime,lc.del_flag
+        FROM ls_coupon_code AS lcc JOIN ls_coupon AS lc ON lc.id=lcc.coupon_id WHERE lcc.customer_id=#{customerId} AND lcc.status=#{status}  AND lc.del_flag='0') AS lcc_lc
+        LEFT JOIN ls_store_info lsi ON lcc_lc.store_id=lsi.id) AS coupon_store LEFT JOIN ls_coupon_fall ON coupon_store.coupon_id=ls_coupon_fall.coupon_id) AS coupon_store_fall
+        LEFT JOIN ls_coupon_full ON coupon_store_fall.coupon_id=ls_coupon_full.coupon_id) AS ls_code_info
+        WHERE (store_status='2' OR store_status IS NULL) AND (store_delflag='0' OR store_delflag IS NULL)
+    </select>
+</mapper>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecshop.spec.mapper.SpecMapper">
+
+    <resultMap id="spec" type="com.lecshop.spec.bean.Spec" >
+        <result column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="nick_name" property="nickName" />
+        <result column="del_flag" property="delFlag" />
+        <result column="create_name" property="createName" />
+        <result column="modify_name" property="modifyName" />
+        <result column="del_name" property="delName" />
+        <result column="create_time " property="createTime" />
+        <result column="modify_time" property="modifyTime" />
+        <result column="del_time" property="delTime" />
+    </resultMap>
+
+    <insert id="addSpec" parameterType="com.lecshop.spec.bean.Spec" useGeneratedKeys="true" keyProperty="id">
+        insert into ls_spec
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                name,
+            </if>
+            <if test="nickName != null">
+                nick_name,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+            <if test="createName != null">
+                create_name,
+            </if>
+            <if test="modifyName != null">
+                modify_name,
+            </if>
+            <if test="delName != null">
+                del_name,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="modifyTime != null">
+                modify_time,
+            </if>
+            <if test="delTime != null">
+                del_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="nickName != null">
+                #{nickName},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag},
+            </if>
+            <if test="createName != null">
+                #{createName},
+            </if>
+            <if test="modifyName != null">
+                #{modifyName},
+            </if>
+            <if test="delName != null">
+                #{delName},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="modifyTime != null">
+                #{modifyTime},
+            </if>
+            <if test="delTime != null">
+                #{delTime},
+            </if>
+        </trim>
+    </insert>
+
+
+
+    <select id="querySpecs" parameterType="java.util.Map" resultMap="spec">
+        select * from ls_spec
+        where del_flag = '0'
+        <if test="name != null and name != '' ">
+            AND name like CONCAT(CONCAT('%', #{name}),'%')
+        </if>
+
+        order by create_time desc
+        limit #{startRowNum},#{pageSize}
+    </select>
+
+    <select id="querySpecsCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(1) from ls_spec
+        where del_flag = '0'
+        <if test="name != null and name != '' ">
+            AND name like CONCAT(CONCAT('%', #{name}),'%')
+        </if>
+    </select>
+
+
+    <select id="querySpecById" parameterType="java.lang.Long" resultMap="spec">
+        select * from ls_spec
+        where del_flag = '0' AND  id = #{id}
+    </select>
+
+    <update id="deleteSpec" parameterType="com.lecshop.spec.bean.Spec">
+        update ls_spec
+        <set >
+            <if test="delFlag != null" >
+                del_flag = #{delFlag},
+            </if>
+            <if test="delName != null" >
+                del_name = #{delName},
+            </if>
+            <if test="delTime != null" >
+                del_time = #{delTime}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="updateSpec" parameterType="com.lecshop.spec.bean.Spec">
+        update ls_spec
+        <set >
+            <if test="name != null" >
+                name = #{name},
+            </if>
+            <if test="nickName != null" >
+                nick_name = #{nickName},
+            </if>
+            <if test="modifyName != null" >
+                modify_name = #{modifyName},
+            </if>
+            <if test="modifyTime != null" >
+                modify_time = #{modifyTime}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="queryAllSpec" parameterType="java.lang.Long" resultMap="spec">
+        select * from ls_spec
+        where del_flag = '0'
+    </select>
+</mapper>
